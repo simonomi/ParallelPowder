@@ -11,26 +11,8 @@ struct Uniforms {
 	unsigned int frameNumber;
 };
 
-typedef uint8_t Pixel;
-
-#ifdef __METAL__
-constant
-#endif
-Pixel BORDER = 0;
-
-#ifdef __METAL__
-constant
-#endif
-Pixel AIR = 1;
-
-#ifdef __METAL__
-constant
-#endif
-Pixel SAND = 2;
-
-#ifdef __METAL__
-constant
-#endif
-Pixel WATER = 3;
+enum struct Pixel: uint8_t {
+	border, air, sand, water
+};
 
 #endif /* SharedTypes_h */

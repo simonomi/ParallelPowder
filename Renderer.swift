@@ -70,7 +70,7 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		boards = (0..<2).map { _ in
 			device.makeBuffer(
-				bytes: Self.randomBytes(width: width, height: height),
+				bytes: Self.randomPixels(width: width, height: height),
 				length: width * height
 			)!
 		}
@@ -93,6 +93,7 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		processInput()
 		
+		print("tick")
 		boards.swapAt(0, 1)
 		
 		uniformsBuffer.contents()
@@ -152,7 +153,7 @@ class Renderer: NSObject, MTKViewDelegate {
 			
 			boards = (0..<2).map { _ in
 				device.makeBuffer(
-					bytes: Self.randomBytes(width: width, height: height),
+					bytes: Self.randomPixels(width: width, height: height),
 					length: width * height
 				)!
 			}
@@ -163,12 +164,12 @@ class Renderer: NSObject, MTKViewDelegate {
 		// TODO: dragging
 	}
 	
-	static func randomBytes(width: Int, height: Int) -> [UInt8] {
+	static func randomPixels(width: Int, height: Int) -> [Pixel] {
 		(0..<(width * height)).map {
 			if ($0 % width) > (width / 3) && ($0 % width) < (width / 3 * 2) {
-				UInt8.random(in: 1..<3)
+				.random() ? .sand : .air
 			} else {
-				AIR
+				.air
 			}
 		}
 	}
