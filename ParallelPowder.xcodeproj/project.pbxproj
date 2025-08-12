@@ -6,17 +6,24 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		AB2426E22E4A8B9D004A7AC0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB2426DD2E4A8B9D004A7AC0 /* Assets.xcassets */; };
+		AB2426E42E4A8B9D004A7AC0 /* ParallelPowder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2426E02E4A8B9D004A7AC0 /* ParallelPowder.swift */; };
+		AB46BB252E4A8ECD00D391C3 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB46BB242E4A8ECD00D391C3 /* Shaders.metal */; };
+		AB46BB272E4A963D00D391C3 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB46BB262E4A963D00D391C3 /* Renderer.swift */; };
+		AB46BB2F2E4A9DB000D391C3 /* MetalMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB46BB2E2E4A9DB000D391C3 /* MetalMapView.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		AB2426CE2E4A8B95004A7AC0 /* ParallelPowder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ParallelPowder.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB2426DD2E4A8B9D004A7AC0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AB2426DF2E4A8B9D004A7AC0 /* ParallelPowder.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ParallelPowder.entitlements; sourceTree = "<group>"; };
+		AB2426E02E4A8B9D004A7AC0 /* ParallelPowder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParallelPowder.swift; sourceTree = "<group>"; };
+		AB46BB242E4A8ECD00D391C3 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		AB46BB262E4A963D00D391C3 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		AB46BB2E2E4A9DB000D391C3 /* MetalMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalMapView.swift; sourceTree = "<group>"; };
+		ABB538452E4AC1520021B6AD /* SharedTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SharedTypes.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		AB2426D02E4A8B95004A7AC0 /* ParallelPowder */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ParallelPowder;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		AB2426CB2E4A8B95004A7AC0 /* Frameworks */ = {
@@ -32,7 +39,12 @@
 		AB2426C52E4A8B95004A7AC0 = {
 			isa = PBXGroup;
 			children = (
-				AB2426D02E4A8B95004A7AC0 /* ParallelPowder */,
+				AB2426DF2E4A8B9D004A7AC0 /* ParallelPowder.entitlements */,
+				AB2426E12E4A8B9D004A7AC0 /* views */,
+				AB46BB262E4A963D00D391C3 /* Renderer.swift */,
+				ABB538452E4AC1520021B6AD /* SharedTypes.h */,
+				AB46BB242E4A8ECD00D391C3 /* Shaders.metal */,
+				AB2426E52E4A8BA2004A7AC0 /* assets */,
 				AB2426CF2E4A8B95004A7AC0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +55,23 @@
 				AB2426CE2E4A8B95004A7AC0 /* ParallelPowder.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		AB2426E12E4A8B9D004A7AC0 /* views */ = {
+			isa = PBXGroup;
+			children = (
+				AB2426E02E4A8B9D004A7AC0 /* ParallelPowder.swift */,
+				AB46BB2E2E4A9DB000D391C3 /* MetalMapView.swift */,
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
+		AB2426E52E4A8BA2004A7AC0 /* assets */ = {
+			isa = PBXGroup;
+			children = (
+				AB2426DD2E4A8B9D004A7AC0 /* Assets.xcassets */,
+			);
+			path = assets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -59,9 +88,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				AB2426D02E4A8B95004A7AC0 /* ParallelPowder */,
 			);
 			name = ParallelPowder;
 			packageProductDependencies = (
@@ -109,6 +135,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB2426E22E4A8B9D004A7AC0 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +146,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB46BB272E4A963D00D391C3 /* Renderer.swift in Sources */,
+				AB46BB252E4A8ECD00D391C3 /* Shaders.metal in Sources */,
+				AB46BB2F2E4A9DB000D391C3 /* MetalMapView.swift in Sources */,
+				AB2426E42E4A8B9D004A7AC0 /* ParallelPowder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,7 +277,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = ParallelPowder/ParallelPowder.entitlements;
+				CODE_SIGN_ENTITLEMENTS = ParallelPowder.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 227FGD37B4;
@@ -274,6 +305,7 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = SharedTypes.h;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 2.5;
@@ -285,7 +317,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = ParallelPowder/ParallelPowder.entitlements;
+				CODE_SIGN_ENTITLEMENTS = ParallelPowder.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 227FGD37B4;
@@ -313,6 +345,7 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = SharedTypes.h;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 2.5;
