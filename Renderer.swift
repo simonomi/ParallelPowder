@@ -93,7 +93,6 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		processInput()
 		
-		print("tick")
 		boards.swapAt(0, 1)
 		
 		uniformsBuffer.contents()
