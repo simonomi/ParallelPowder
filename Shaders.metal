@@ -36,10 +36,6 @@ struct Position {
 		return x == other.x && y == other.y;
 	}
 	
-	Position below() {
-		return Position(x, y - 1);
-	};
-	
 	Position offsetBy(int xOffset, int yOffset) {
 		return Position(x + xOffset, y + yOffset);
 	};
@@ -58,6 +54,7 @@ struct RNG {
 	Position position;
 	int repetition;
 	
+	// TODO: include more seeds to prevent repetition
 	RNG(
 		unsigned int inputFrameNumber,
 		Position inputPosition
@@ -67,16 +64,15 @@ struct RNG {
 		repetition(0)
 	{}
 	
-	// TODO: does this work... like at all?
-	// should return [0, maximum]
+	// returns an int [0, maximum]
 	int generateUpTo(int maximum) {
-		repetition += 1; // TODO: does this mutate self.repetition?
+		repetition += 1;
 		
 		return rand(
 			frameNumber + repetition,
 			position.x + repetition,
 			position.y + repetition
-		) * float(maximum);
+		) * float(maximum + 1);
 	}
 };
 
@@ -149,8 +145,13 @@ struct Board {
 	}
 	
 	Goal goalForCellAt(Position position) {
-		if (pixelAt(position) == Pixel::sand && pixelAt(position.below()) == Pixel::air) {
-			return Goal::swapWith(position.below(), 0);
+		if (pixelAt(position) == Pixel::sand && pixelAt(position.offsetBy(0, -1)) == Pixel::air) {
+			return Goal::swapWith(position.offsetBy(0, -1), 2);
+		// TODO: prefers falling left over right, should be random
+		} else if (pixelAt(position) == Pixel::sand && pixelAt(position.offsetBy(-1, -1)) == Pixel::air) {
+			return Goal::swapWith(position.offsetBy(-1, -1), 1);
+		} else if (pixelAt(position) == Pixel::sand && pixelAt(position.offsetBy(1, -1)) == Pixel::air) {
+			return Goal::swapWith(position.offsetBy(1, -1), 1);
 		} else {
 			return Goal::changeTo(pixelAt(position), 0);
 		}
