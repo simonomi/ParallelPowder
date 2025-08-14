@@ -9,9 +9,15 @@
 /* Begin PBXBuildFile section */
 		AB2426E22E4A8B9D004A7AC0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB2426DD2E4A8B9D004A7AC0 /* Assets.xcassets */; };
 		AB2426E42E4A8B9D004A7AC0 /* ParallelPowder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2426E02E4A8B9D004A7AC0 /* ParallelPowder.swift */; };
-		AB46BB252E4A8ECD00D391C3 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB46BB242E4A8ECD00D391C3 /* Shaders.metal */; };
+		AB46BB252E4A8ECD00D391C3 /* tick.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB46BB242E4A8ECD00D391C3 /* tick.metal */; };
 		AB46BB272E4A963D00D391C3 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB46BB262E4A963D00D391C3 /* Renderer.swift */; };
 		AB46BB2F2E4A9DB000D391C3 /* MetalMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB46BB2E2E4A9DB000D391C3 /* MetalMapView.swift */; };
+		AB6BF5342E4E8B08005D2464 /* render texture.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB6BF5332E4E8B08005D2464 /* render texture.metal */; };
+		AB6BF5362E4E8B46005D2464 /* Pixel.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB6BF5352E4E8B46005D2464 /* Pixel.metal */; };
+		AB9C78AB2E4E803D008C90FD /* Position.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB9C78AA2E4E803D008C90FD /* Position.metal */; };
+		AB9C78AF2E4E83DA008C90FD /* RNG.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB9C78AE2E4E83DA008C90FD /* RNG.metal */; };
+		AB9C78B12E4E84CF008C90FD /* Goal.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB9C78B02E4E84CF008C90FD /* Goal.metal */; };
+		AB9C78B32E4E84D4008C90FD /* Board.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB9C78B22E4E84D4008C90FD /* Board.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,10 +25,22 @@
 		AB2426DD2E4A8B9D004A7AC0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AB2426DF2E4A8B9D004A7AC0 /* ParallelPowder.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ParallelPowder.entitlements; sourceTree = "<group>"; };
 		AB2426E02E4A8B9D004A7AC0 /* ParallelPowder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParallelPowder.swift; sourceTree = "<group>"; };
-		AB46BB242E4A8ECD00D391C3 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		AB46BB242E4A8ECD00D391C3 /* tick.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = tick.metal; sourceTree = "<group>"; };
 		AB46BB262E4A963D00D391C3 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		AB46BB2E2E4A9DB000D391C3 /* MetalMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalMapView.swift; sourceTree = "<group>"; };
-		ABB538452E4AC1520021B6AD /* SharedTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SharedTypes.h; sourceTree = "<group>"; };
+		AB6BF5302E4E8646005D2464 /* Board.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Board.hpp; sourceTree = "<group>"; };
+		AB6BF5312E4E8957005D2464 /* Uniforms.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Uniforms.hpp; sourceTree = "<group>"; };
+		AB6BF5322E4E895C005D2464 /* Pixel.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Pixel.hpp; sourceTree = "<group>"; };
+		AB6BF5332E4E8B08005D2464 /* render texture.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = "render texture.metal"; sourceTree = "<group>"; };
+		AB6BF5352E4E8B46005D2464 /* Pixel.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Pixel.metal; sourceTree = "<group>"; };
+		AB9C78AA2E4E803D008C90FD /* Position.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Position.metal; sourceTree = "<group>"; };
+		AB9C78AC2E4E806A008C90FD /* Position.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Position.hpp; sourceTree = "<group>"; };
+		AB9C78AD2E4E83D1008C90FD /* RNG.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RNG.hpp; sourceTree = "<group>"; };
+		AB9C78AE2E4E83DA008C90FD /* RNG.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = RNG.metal; sourceTree = "<group>"; };
+		AB9C78B02E4E84CF008C90FD /* Goal.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Goal.metal; sourceTree = "<group>"; };
+		AB9C78B22E4E84D4008C90FD /* Board.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Board.metal; sourceTree = "<group>"; };
+		AB9C78B42E4E85AA008C90FD /* Goal.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Goal.hpp; sourceTree = "<group>"; };
+		ABB538452E4AC1520021B6AD /* SharedTypes.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SharedTypes.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,8 +60,20 @@
 				AB2426DF2E4A8B9D004A7AC0 /* ParallelPowder.entitlements */,
 				AB2426E12E4A8B9D004A7AC0 /* views */,
 				AB46BB262E4A963D00D391C3 /* Renderer.swift */,
-				ABB538452E4AC1520021B6AD /* SharedTypes.h */,
-				AB46BB242E4A8ECD00D391C3 /* Shaders.metal */,
+				ABB538452E4AC1520021B6AD /* SharedTypes.hpp */,
+				AB6BF5312E4E8957005D2464 /* Uniforms.hpp */,
+				AB6BF5322E4E895C005D2464 /* Pixel.hpp */,
+				AB6BF5352E4E8B46005D2464 /* Pixel.metal */,
+				AB9C78AC2E4E806A008C90FD /* Position.hpp */,
+				AB9C78AA2E4E803D008C90FD /* Position.metal */,
+				AB9C78AD2E4E83D1008C90FD /* RNG.hpp */,
+				AB9C78AE2E4E83DA008C90FD /* RNG.metal */,
+				AB9C78B42E4E85AA008C90FD /* Goal.hpp */,
+				AB9C78B02E4E84CF008C90FD /* Goal.metal */,
+				AB6BF5302E4E8646005D2464 /* Board.hpp */,
+				AB9C78B22E4E84D4008C90FD /* Board.metal */,
+				AB46BB242E4A8ECD00D391C3 /* tick.metal */,
+				AB6BF5332E4E8B08005D2464 /* render texture.metal */,
 				AB2426E52E4A8BA2004A7AC0 /* assets */,
 				AB2426CF2E4A8B95004A7AC0 /* Products */,
 			);
@@ -146,10 +176,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB6BF5342E4E8B08005D2464 /* render texture.metal in Sources */,
 				AB46BB272E4A963D00D391C3 /* Renderer.swift in Sources */,
-				AB46BB252E4A8ECD00D391C3 /* Shaders.metal in Sources */,
+				AB9C78B12E4E84CF008C90FD /* Goal.metal in Sources */,
+				AB46BB252E4A8ECD00D391C3 /* tick.metal in Sources */,
 				AB46BB2F2E4A9DB000D391C3 /* MetalMapView.swift in Sources */,
+				AB9C78B32E4E84D4008C90FD /* Board.metal in Sources */,
+				AB6BF5362E4E8B46005D2464 /* Pixel.metal in Sources */,
+				AB9C78AB2E4E803D008C90FD /* Position.metal in Sources */,
 				AB2426E42E4A8B9D004A7AC0 /* ParallelPowder.swift in Sources */,
+				AB9C78AF2E4E83DA008C90FD /* RNG.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,7 +341,7 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = SharedTypes.h;
+				SWIFT_OBJC_BRIDGING_HEADER = SharedTypes.hpp;
 				SWIFT_OBJC_INTEROP_MODE = objcxx;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
@@ -346,7 +382,7 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = SharedTypes.h;
+				SWIFT_OBJC_BRIDGING_HEADER = SharedTypes.hpp;
 				SWIFT_OBJC_INTEROP_MODE = objcxx;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
