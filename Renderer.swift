@@ -4,6 +4,11 @@ var reset = false
 var isDrawing = false
 var drawLocation = CGPoint(x: -1, y: -1)
 
+var radius = 1
+
+var drawCanvas: Pixel = .air
+var drawPaint: Pixel = .sand
+
 class Renderer: NSObject, MTKViewDelegate {
 	var device: MTLDevice
 	var commandQueue: MTLCommandQueue
@@ -169,10 +174,19 @@ class Renderer: NSObject, MTKViewDelegate {
 			if 0 < x, x < width, 0 < y, y < height {
 				boards[1].contents().withMemoryRebound(
 					to: Pixel.self,
-					capacity: Int(currentSize.width * currentSize.height)
+					capacity: width * height
 				) { pointer in
-					if pointer[y * Int(currentSize.width) + x] == .air {
-						pointer[y * Int(currentSize.width) + x] = .sand
+					for yOffset in -radius...radius {
+						for xOffset in -radius...radius {
+							let newX = x + xOffset
+							let newY = y + yOffset
+							
+							if 0 < newX, newX < width, 0 < newY, newY < height {
+								if pointer[newY * width + newX] == drawCanvas {
+									pointer[newY * width + newX] = drawPaint
+								}
+							}
+						}
 					}
 				}
 			}

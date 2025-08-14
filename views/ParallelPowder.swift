@@ -15,6 +15,36 @@ struct ParallelPowder: App {
 				}
 				.onKeyPress("r") {
 					reset = true
+					
+					return .handled
+				}
+				.onKeyPress("w") {
+					if drawPaint == .sand {
+						drawPaint = .water
+					} else if drawPaint == .water {
+						drawPaint = .sand
+					}
+					
+					return .handled
+				}
+				.onKeyPress(.tab) {
+					(drawCanvas, drawPaint) = (drawPaint, drawCanvas)
+					print("swap paint")
+					
+					return .handled
+				}
+				.onKeyPress("=") {
+					radius += 1
+					print("radius", radius)
+					
+					return .handled
+				}
+				.onKeyPress("-") {
+					if radius > 0 {
+						radius -= 1
+						print("radius", radius)
+					}
+					
 					return .handled
 				}
 				.gesture(
