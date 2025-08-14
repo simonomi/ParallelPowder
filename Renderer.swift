@@ -1,6 +1,8 @@
 import MetalKit
 
 var reset = false
+var isDrawing = false
+var drawLocation = CGPoint(x: -1, y: -1)
 
 class Renderer: NSObject, MTKViewDelegate {
 	var device: MTLDevice
@@ -160,7 +162,21 @@ class Renderer: NSObject, MTKViewDelegate {
 			reset = false
 		}
 		
-		// TODO: dragging
+		if isDrawing {
+			let (width, height) = (Int(currentSize.width), Int(currentSize.height))
+			let (x, y) = (Int(drawLocation.x * 2), height - Int(drawLocation.y * 2))
+			
+			if 0 < x, x < width, 0 < y, y < height {
+				boards[1].contents().withMemoryRebound(
+					to: Pixel.self,
+					capacity: Int(currentSize.width * currentSize.height)
+				) { pointer in
+					if pointer[y * Int(currentSize.width) + x] == .air {
+						pointer[y * Int(currentSize.width) + x] = .sand
+					}
+				}
+			}
+		}
 	}
 	
 	static func randomPixels(width: Int, height: Int) -> [Pixel] {

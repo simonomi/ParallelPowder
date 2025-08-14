@@ -20,10 +20,11 @@ struct ParallelPowder: App {
 				.gesture(
 					DragGesture()
 						.onChanged { state in
-							print("drag", state.location)
+							isDrawing = true
+							drawLocation = state.location
 						}
 						.onEnded { _ in
-							print("drag ended")
+							isDrawing = false
 						}
 				)
 		}
