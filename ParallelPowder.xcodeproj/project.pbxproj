@@ -15,6 +15,7 @@
 		AB6BF5342E4E8B08005D2464 /* render texture.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB6BF5332E4E8B08005D2464 /* render texture.metal */; };
 		AB6BF5402E4EE7AA005D2464 /* goalForCellAt.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB6BF53F2E4EE7AA005D2464 /* goalForCellAt.metal */; };
 		AB6BF54A2E4EF90A005D2464 /* Pixel.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB6BF5492E4EF90A005D2464 /* Pixel.metal */; };
+		AB6BF54C2E4EFD4E005D2464 /* drawBoard.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB6BF54B2E4EFD4E005D2464 /* drawBoard.metal */; };
 		AB9C78AB2E4E803D008C90FD /* Position.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB9C78AA2E4E803D008C90FD /* Position.metal */; };
 		AB9C78AF2E4E83DA008C90FD /* RNG.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB9C78AE2E4E83DA008C90FD /* RNG.metal */; };
 		AB9C78B12E4E84CF008C90FD /* Goal.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB9C78B02E4E84CF008C90FD /* Goal.metal */; };
@@ -35,6 +36,7 @@
 		AB6BF5332E4E8B08005D2464 /* render texture.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = "render texture.metal"; sourceTree = "<group>"; };
 		AB6BF53F2E4EE7AA005D2464 /* goalForCellAt.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = goalForCellAt.metal; sourceTree = "<group>"; };
 		AB6BF5492E4EF90A005D2464 /* Pixel.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Pixel.metal; sourceTree = "<group>"; };
+		AB6BF54B2E4EFD4E005D2464 /* drawBoard.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = drawBoard.metal; sourceTree = "<group>"; };
 		AB9C78AA2E4E803D008C90FD /* Position.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Position.metal; sourceTree = "<group>"; };
 		AB9C78AC2E4E806A008C90FD /* Position.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Position.hpp; sourceTree = "<group>"; };
 		AB9C78AD2E4E83D1008C90FD /* RNG.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RNG.hpp; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 				AB9C78B22E4E84D4008C90FD /* Board.metal */,
 				AB6BF53F2E4EE7AA005D2464 /* goalForCellAt.metal */,
 				AB46BB242E4A8ECD00D391C3 /* tick.metal */,
+				AB6BF54B2E4EFD4E005D2464 /* drawBoard.metal */,
 				AB6BF5332E4E8B08005D2464 /* render texture.metal */,
 			);
 			path = shaders;
@@ -197,6 +200,7 @@
 				AB2426E42E4A8B9D004A7AC0 /* ParallelPowder.swift in Sources */,
 				AB6BF54A2E4EF90A005D2464 /* Pixel.metal in Sources */,
 				AB9C78AF2E4E83DA008C90FD /* RNG.metal in Sources */,
+				AB6BF54C2E4EFD4E005D2464 /* drawBoard.metal in Sources */,
 				AB6BF5402E4EE7AA005D2464 /* goalForCellAt.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

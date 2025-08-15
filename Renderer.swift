@@ -1,5 +1,7 @@
 import MetalKit
 
+var isPaused = false
+
 var reset = false
 var isDrawing = false
 var drawLocation = CGPoint(x: -1, y: -1)
@@ -100,8 +102,6 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		processInput()
 		
-		boards.swapAt(0, 1)
-		
 		uniformsBuffer.contents()
 			.withMemoryRebound(to: Uniforms.self, capacity: 1) { uniforms in
 				uniforms.pointee.frameNumber += 1
@@ -109,16 +109,42 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		let commandBuffer = commandQueue.makeCommandBuffer()!
 		
-		// set compute shader
 		let library = device.makeDefaultLibrary()!
-		let computeFunction = library.makeFunction(name: "tick")!
-		let computePipelineState = try! device.makeComputePipelineState(function: computeFunction)
+		if !isPaused {
+			// tick
+			let tick = library.makeFunction(name: "tick")!
+			let computePipelineState = try! device.makeComputePipelineState(function: tick)
+			
+			let computeEncoder = commandBuffer.makeComputeCommandEncoder()!
+			
+			computeEncoder.setBuffer(uniformsBuffer, offset: 0, index: 0)
+			computeEncoder.setBuffer(boards[0], offset: 0, index: 1)
+			computeEncoder.setBuffer(boards[1], offset: 0, index: 2)
+			
+			computeEncoder.setComputePipelineState(computePipelineState)
+			
+			let (width, height) = (Int(view.drawableSize.width), Int(view.drawableSize.height))
+			let threadsPerThreadgroup = MTLSize(width: 8, height: 8, depth: 1)
+			let threadGridSize = MTLSize(
+				width: width / threadsPerThreadgroup.width + 1,
+				height: height / threadsPerThreadgroup.height + 1,
+				depth: 1
+			)
+			computeEncoder.dispatchThreadgroups(threadGridSize, threadsPerThreadgroup: threadsPerThreadgroup)
+			
+			computeEncoder.endEncoding()
+			
+			boards.swapAt(0, 1)
+		}
+		
+		// drawBoard
+		let drawBoard = library.makeFunction(name: "drawBoard")!
+		let computePipelineState = try! device.makeComputePipelineState(function: drawBoard)
 		
 		let computeEncoder = commandBuffer.makeComputeCommandEncoder()!
 		
 		computeEncoder.setBuffer(uniformsBuffer, offset: 0, index: 0)
 		computeEncoder.setBuffer(boards[0], offset: 0, index: 1)
-		computeEncoder.setBuffer(boards[1], offset: 0, index: 2)
 		
 		computeEncoder.setTexture(displayBuffer, index: 0)
 		
@@ -134,7 +160,7 @@ class Renderer: NSObject, MTKViewDelegate {
 		computeEncoder.dispatchThreadgroups(threadGridSize, threadsPerThreadgroup: threadsPerThreadgroup)
 		
 		computeEncoder.endEncoding()
-		
+			
 		// render stuff
 		let renderPassDescriptor = view.currentRenderPassDescriptor!
 		
@@ -157,12 +183,10 @@ class Renderer: NSObject, MTKViewDelegate {
 		if reset {
 			let (width, height) = (Int(currentSize.width), Int(currentSize.height))
 			
-			boards = (0..<2).map { _ in
-				device.makeBuffer(
-					bytes: Self.randomPixels(width: width, height: height),
-					length: width * height
-				)!
-			}
+			boards[0] = device.makeBuffer(
+				bytes: Self.randomPixels(width: width, height: height),
+				length: width * height
+			)!
 			
 			reset = false
 		}
@@ -172,7 +196,7 @@ class Renderer: NSObject, MTKViewDelegate {
 			let (x, y) = (Int(drawLocation.x * 2), height - Int(drawLocation.y * 2))
 			
 			if 0 < x, x < width, 0 < y, y < height {
-				boards[1].contents().withMemoryRebound(
+				boards[0].contents().withMemoryRebound(
 					to: Pixel.self,
 					capacity: width * height
 				) { pointer in

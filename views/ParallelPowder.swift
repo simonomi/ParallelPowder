@@ -13,6 +13,12 @@ struct ParallelPowder: App {
 				.onAppear {
 					isFocused = true
 				}
+				.onKeyPress(.space) {
+					isPaused.toggle()
+					print(isPaused ? "pause" : "unpause")
+					
+					return .handled
+				}
 				.onKeyPress("r") {
 					reset = true
 					
