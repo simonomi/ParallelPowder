@@ -6,7 +6,7 @@
 struct RNG {
 	Position position;
 	unsigned int frameNumber;
-	int repetition;
+	int seed;
 	
 	RNG(
 		Position inputPosition,

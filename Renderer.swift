@@ -1,3 +1,4 @@
+import Foundation
 import MetalKit
 
 var isPaused = false
@@ -10,6 +11,8 @@ var radius = 1
 
 var drawCanvas: Pixel = .air
 var drawPaint: Pixel = .sand
+
+var previousFrameDate = Date()
 
 class Renderer: NSObject, MTKViewDelegate {
 	var device: MTLDevice
@@ -100,7 +103,7 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		boards = (0..<2).map { _ in
 			device.makeBuffer(
-				bytes: Self.randomPixels(width: width, height: height),
+				bytes: Self.allAir(width: width, height: height),
 				length: width * height
 			)!
 		}
@@ -121,6 +124,13 @@ class Renderer: NSObject, MTKViewDelegate {
 	func draw(in view: MTKView) {
 		precondition(view.drawableSize == currentSize)
 		
+		let fps = 1 / -previousFrameDate.timeIntervalSinceNow
+		if fps.isFinite {
+			print(Int(fps), "fps", separator: "")
+		}
+		
+		previousFrameDate = .now
+		
 		guard let drawable = view.currentDrawable else { return }
 		
 		processInput()
@@ -133,8 +143,10 @@ class Renderer: NSObject, MTKViewDelegate {
 		let commandBuffer = commandQueue.makeCommandBuffer()!
 		
 		if !isPaused {
-			tick(commandBuffer)
-			boards.swapAt(0, 1)
+			for _ in 0..<10 {
+				tick(commandBuffer)
+				boards.swapAt(0, 1)
+			}
 		}
 		
 		render(view, commandBuffer)
@@ -180,7 +192,7 @@ class Renderer: NSObject, MTKViewDelegate {
 			let (width, height) = (Int(currentSize.width), Int(currentSize.height))
 			
 			boards[0] = device.makeBuffer(
-				bytes: Self.randomPixels(width: width, height: height),
+				bytes: Self.allAir(width: width, height: height),
 				length: width * height
 			)!
 			
@@ -221,5 +233,9 @@ class Renderer: NSObject, MTKViewDelegate {
 				.air
 			}
 		}
+	}
+	
+	static func allAir(width: Int, height: Int) -> [Pixel] {
+		Array(repeating: .air, count: width * height)
 	}
 }

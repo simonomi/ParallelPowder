@@ -17,6 +17,10 @@ float4 colorFor(Pixel pixel) {
 			return float4(0, 0.4, 0.6, 1);
 		case Pixel::block:
 			return float4(0.5, 0.5, 0.5, 1);
+		case Pixel::tree:
+			return float4(0.33, 0.72, 0.30, 1);
+		case Pixel::fire:
+			return float4(1, 1, 0, 1);
 	}
 }
 

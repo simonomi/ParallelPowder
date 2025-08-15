@@ -18,20 +18,22 @@ RNG::RNG(
 ) :
 	position(inputPosition),
 	frameNumber(inputFrameNumber),
-	repetition(0)
+	seed(0)
 {}
 
 /// returns true with a 1/denominator chance
 bool RNG::oneChanceIn(int denominator) {
 	if (denominator == 1) { return true; }
 	
-	repetition += 1;
+	float randomNumber = rand(
+		42577 * position.x + 782941 * position.y,
+		frameNumber,
+		seed
+	);
 	
-	float zeroToDenominator = rand(
-		position.x + repetition,
-		position.y + repetition,
-		frameNumber + repetition
-	) * float(denominator);
+	seed = randomNumber * float(INT_MAX);
+	
+	float zeroToDenominator = randomNumber * float(denominator);
 	
 	return zeroToDenominator < 1;
 }

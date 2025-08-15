@@ -13,6 +13,8 @@ int densityOf(Pixel pixel) {
 			return 1;
 		case Pixel::outOfBounds:
 		case Pixel::block:
+		case Pixel::tree:
+		case Pixel::fire:
 			return 999;
 	}
 }
