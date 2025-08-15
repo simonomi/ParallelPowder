@@ -12,10 +12,10 @@
 		AB46BB252E4A8ECD00D391C3 /* tick.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB46BB242E4A8ECD00D391C3 /* tick.metal */; };
 		AB46BB272E4A963D00D391C3 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB46BB262E4A963D00D391C3 /* Renderer.swift */; };
 		AB46BB2F2E4A9DB000D391C3 /* MetalMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB46BB2E2E4A9DB000D391C3 /* MetalMapView.swift */; };
-		AB6BF5342E4E8B08005D2464 /* render texture.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB6BF5332E4E8B08005D2464 /* render texture.metal */; };
+		AB6BF5342E4E8B08005D2464 /* fullScreenVertices.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB6BF5332E4E8B08005D2464 /* fullScreenVertices.metal */; };
 		AB6BF5402E4EE7AA005D2464 /* goalForCellAt.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB6BF53F2E4EE7AA005D2464 /* goalForCellAt.metal */; };
 		AB6BF54A2E4EF90A005D2464 /* Pixel.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB6BF5492E4EF90A005D2464 /* Pixel.metal */; };
-		AB6BF54C2E4EFD4E005D2464 /* drawBoard.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB6BF54B2E4EFD4E005D2464 /* drawBoard.metal */; };
+		AB6BF54E2E4F1147005D2464 /* drawBoard.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB6BF54D2E4F1147005D2464 /* drawBoard.metal */; };
 		AB9C78AB2E4E803D008C90FD /* Position.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB9C78AA2E4E803D008C90FD /* Position.metal */; };
 		AB9C78AF2E4E83DA008C90FD /* RNG.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB9C78AE2E4E83DA008C90FD /* RNG.metal */; };
 		AB9C78B12E4E84CF008C90FD /* Goal.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB9C78B02E4E84CF008C90FD /* Goal.metal */; };
@@ -33,10 +33,11 @@
 		AB6BF5302E4E8646005D2464 /* Board.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Board.hpp; sourceTree = "<group>"; };
 		AB6BF5312E4E8957005D2464 /* Uniforms.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Uniforms.hpp; sourceTree = "<group>"; };
 		AB6BF5322E4E895C005D2464 /* Pixel.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Pixel.hpp; sourceTree = "<group>"; };
-		AB6BF5332E4E8B08005D2464 /* render texture.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = "render texture.metal"; sourceTree = "<group>"; };
+		AB6BF5332E4E8B08005D2464 /* fullScreenVertices.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = fullScreenVertices.metal; sourceTree = "<group>"; };
 		AB6BF53F2E4EE7AA005D2464 /* goalForCellAt.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = goalForCellAt.metal; sourceTree = "<group>"; };
 		AB6BF5492E4EF90A005D2464 /* Pixel.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Pixel.metal; sourceTree = "<group>"; };
-		AB6BF54B2E4EFD4E005D2464 /* drawBoard.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = drawBoard.metal; sourceTree = "<group>"; };
+		AB6BF54D2E4F1147005D2464 /* drawBoard.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = drawBoard.metal; sourceTree = "<group>"; };
+		AB6BF54F2E4F116D005D2464 /* VertexShaderResult.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VertexShaderResult.hpp; sourceTree = "<group>"; };
 		AB9C78AA2E4E803D008C90FD /* Position.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Position.metal; sourceTree = "<group>"; };
 		AB9C78AC2E4E806A008C90FD /* Position.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Position.hpp; sourceTree = "<group>"; };
 		AB9C78AD2E4E83D1008C90FD /* RNG.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RNG.hpp; sourceTree = "<group>"; };
@@ -112,8 +113,9 @@
 				AB9C78B22E4E84D4008C90FD /* Board.metal */,
 				AB6BF53F2E4EE7AA005D2464 /* goalForCellAt.metal */,
 				AB46BB242E4A8ECD00D391C3 /* tick.metal */,
-				AB6BF54B2E4EFD4E005D2464 /* drawBoard.metal */,
-				AB6BF5332E4E8B08005D2464 /* render texture.metal */,
+				AB6BF54F2E4F116D005D2464 /* VertexShaderResult.hpp */,
+				AB6BF5332E4E8B08005D2464 /* fullScreenVertices.metal */,
+				AB6BF54D2E4F1147005D2464 /* drawBoard.metal */,
 			);
 			path = shaders;
 			sourceTree = "<group>";
@@ -190,7 +192,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AB6BF5342E4E8B08005D2464 /* render texture.metal in Sources */,
+				AB6BF5342E4E8B08005D2464 /* fullScreenVertices.metal in Sources */,
 				AB46BB272E4A963D00D391C3 /* Renderer.swift in Sources */,
 				AB9C78B12E4E84CF008C90FD /* Goal.metal in Sources */,
 				AB46BB252E4A8ECD00D391C3 /* tick.metal in Sources */,
@@ -200,7 +202,7 @@
 				AB2426E42E4A8B9D004A7AC0 /* ParallelPowder.swift in Sources */,
 				AB6BF54A2E4EF90A005D2464 /* Pixel.metal in Sources */,
 				AB9C78AF2E4E83DA008C90FD /* RNG.metal in Sources */,
-				AB6BF54C2E4EFD4E005D2464 /* drawBoard.metal in Sources */,
+				AB6BF54E2E4F1147005D2464 /* drawBoard.metal in Sources */,
 				AB6BF5402E4EE7AA005D2464 /* goalForCellAt.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

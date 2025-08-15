@@ -1,5 +1,6 @@
 #include <metal_stdlib>
 #include "../SharedTypes.hpp"
+#include "VertexShaderResult.hpp"
 #include "Board.hpp"
 
 using namespace metal;
@@ -19,19 +20,14 @@ float4 colorFor(Pixel pixel) {
 	}
 }
 
-kernel void drawBoard(
-	uint2 tid [[thread_position_in_grid]],
+fragment float4 drawBoard(
+	VertexShaderResult in [[stage_in]],
 	constant const Uniforms* uniforms [[buffer(0)]],
-	device Pixel* currentTick [[buffer(1)]],
-	texture2d<float, access::write> displayBuffer [[texture(0)]]
+	device Pixel* currentTick [[buffer(1)]]
 ) {
-	if (tid.y >= uniforms->height || tid.x >= uniforms->width) {
-		return;
-	}
-	
-	Position position { tid };
+	Position position { int(in.uv.x * uniforms->width), int(in.uv.y * uniforms->height) };
 	
 	Board current { currentTick, uniforms };
 	
-	displayBuffer.write(colorFor(current.pixelAt(position)), tid);
+	return colorFor(current.pixelAt(position));
 }

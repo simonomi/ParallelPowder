@@ -16,14 +16,11 @@ class Renderer: NSObject, MTKViewDelegate {
 	var commandQueue: MTLCommandQueue
 	
 	let tickPipeline: MTLComputePipelineState
-	let drawBoardPipeline: MTLComputePipelineState
-	let copyPipeline: MTLRenderPipelineState
+	let renderPipeline: MTLRenderPipelineState
 	
 	let uniformsBuffer: MTLBuffer
 	
 	var boards: [MTLBuffer]
-	
-	var displayBuffer: MTLTexture?
 	
 	var currentSize: CGSize
 	
@@ -37,8 +34,7 @@ class Renderer: NSObject, MTKViewDelegate {
 		let library = device.makeDefaultLibrary()!
 		
 		tickPipeline = Self.buildTickPipeline(device, library)
-		drawBoardPipeline = Self.buildDrawBoardPipeline(device, library)
-		copyPipeline = Self.buildCopyPipeline(device, metalKitView)
+		renderPipeline = Self.buildRenderPipeline(device, metalKitView)
 		
 		var initialUniforms = Uniforms(
 			width: UInt32(metalKitView.drawableSize.width),
@@ -64,17 +60,12 @@ class Renderer: NSObject, MTKViewDelegate {
 		return try! device.makeComputePipelineState(function: tick)
 	}
 	
-	static func buildDrawBoardPipeline(_ device: MTLDevice, _ library: MTLLibrary) -> MTLComputePipelineState {
-		let drawBoard = library.makeFunction(name: "drawBoard")!
-		return try! device.makeComputePipelineState(function: drawBoard)
-	}
-	
-	static func buildCopyPipeline(_ device: MTLDevice, _ metalKitView: MTKView) -> MTLRenderPipelineState {
+	static func buildRenderPipeline(_ device: MTLDevice, _ metalKitView: MTKView) -> MTLRenderPipelineState {
 		let library = device.makeDefaultLibrary()!
 		
 		let pipelineDescriptor = MTLRenderPipelineDescriptor()
-		pipelineDescriptor.vertexFunction = library.makeFunction(name: "copyVertex")
-		pipelineDescriptor.fragmentFunction = library.makeFunction(name: "copyFragment")
+		pipelineDescriptor.vertexFunction = library.makeFunction(name: "fullScreenVertices")
+		pipelineDescriptor.fragmentFunction = library.makeFunction(name: "drawBoard")
 		pipelineDescriptor.colorAttachments[0].pixelFormat = metalKitView.colorPixelFormat
 		
 		return try! device.makeRenderPipelineState(descriptor: pipelineDescriptor)
@@ -106,8 +97,6 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		textureDescriptor.storageMode = .private
 		textureDescriptor.usage = [.shaderRead, .shaderWrite]
-		
-		displayBuffer = device.makeTexture(descriptor: textureDescriptor)!
 		
 		boards = (0..<2).map { _ in
 			device.makeBuffer(
@@ -148,8 +137,6 @@ class Renderer: NSObject, MTKViewDelegate {
 			boards.swapAt(0, 1)
 		}
 		
-		drawBoard(commandBuffer)
-			
 		render(view, commandBuffer)
 		
 		commandBuffer.present(drawable)
@@ -170,21 +157,6 @@ class Renderer: NSObject, MTKViewDelegate {
 		computeEncoder.endEncoding()
 	}
 	
-	func drawBoard(_ commandBuffer: any MTLCommandBuffer) {
-		let computeEncoder = commandBuffer.makeComputeCommandEncoder()!
-		
-		computeEncoder.setBuffer(uniformsBuffer, offset: 0, index: 0)
-		computeEncoder.setBuffer(boards[0], offset: 0, index: 1)
-		
-		computeEncoder.setTexture(displayBuffer, index: 0)
-		
-		computeEncoder.setComputePipelineState(drawBoardPipeline)
-		
-		computeEncoder.dispatchThreadgroups(threadGridSize, threadsPerThreadgroup: threadsPerThreadgroup)
-		
-		computeEncoder.endEncoding()
-	}
-	
 	func render(_ view: MTKView, _ commandBuffer: any MTLCommandBuffer) {
 		let renderPassDescriptor = view.currentRenderPassDescriptor!
 		
@@ -193,10 +165,11 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
 		
-		// TODO: could i have the fragment texture take an arbitrary buffer?
-		// then it could just draw the frame itself, instead of having to drawBoard to a texture first
-		renderEncoder.setRenderPipelineState(copyPipeline)
-		renderEncoder.setFragmentTexture(displayBuffer, index: 0)
+		renderEncoder.setFragmentBuffer(uniformsBuffer, offset: 0, index: 0)
+		renderEncoder.setFragmentBuffer(boards[0], offset: 0, index: 1)
+		
+		renderEncoder.setRenderPipelineState(renderPipeline)
+		
 		renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
 		
 		renderEncoder.endEncoding()
