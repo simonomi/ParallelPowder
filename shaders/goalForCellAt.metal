@@ -17,10 +17,11 @@ struct GoalAndCriteria {
 	{};
 };
 
+// goals must be sorted by priority high->low
 constant GoalAndCriteria sandGoals[] = {
 	GoalAndCriteria {
 		[](Position position) {
-			return Goal::swapWith(position.offsetBy(0, -1), 2);
+			return Goal::swapWith(position.offsetBy(0, -1), 1);
 		},
 		[](Board board, Position position) {
 			return board.pixelAt(position.offsetBy(0, -1)) == Pixel::air;
@@ -78,9 +79,12 @@ Goal Board::goalForCellAt(Position position, unsigned int frameNumber) {
 		
 		numberConsidered += 1;
 		
-		// each candidate has a (1/index) chance of winning,
-		// which is equivalent to randomly selecting one
-		if (rng.generateUpTo(numberConsidered) == 0) {
+		if (candidateGoal.priority > currentGoal.priority) {
+			currentGoal = candidateGoal;
+			numberConsidered = 1;
+		} else if (rng.generateUpTo(numberConsidered) == 0) {
+			// each candidate has a (1/index) chance of winning,
+			// which is equivalent to randomly selecting one
 			currentGoal = candidateGoal;
 		}
 	}

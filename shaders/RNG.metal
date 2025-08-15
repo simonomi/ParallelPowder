@@ -1,5 +1,4 @@
 #include <metal_stdlib>
-#include "Position.hpp"
 #include "RNG.hpp"
 
 using namespace metal;

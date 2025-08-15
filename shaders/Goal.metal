@@ -1,5 +1,5 @@
 #include <metal_stdlib>
-#include "Pixel.hpp"
+#include "../Pixel.hpp"
 #include "Goal.hpp"
 
 using namespace metal;

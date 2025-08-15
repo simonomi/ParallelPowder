@@ -63,17 +63,7 @@
 				ABB538452E4AC1520021B6AD /* SharedTypes.hpp */,
 				AB6BF5312E4E8957005D2464 /* Uniforms.hpp */,
 				AB6BF5322E4E895C005D2464 /* Pixel.hpp */,
-				AB9C78AC2E4E806A008C90FD /* Position.hpp */,
-				AB9C78AA2E4E803D008C90FD /* Position.metal */,
-				AB9C78AD2E4E83D1008C90FD /* RNG.hpp */,
-				AB9C78AE2E4E83DA008C90FD /* RNG.metal */,
-				AB9C78B42E4E85AA008C90FD /* Goal.hpp */,
-				AB9C78B02E4E84CF008C90FD /* Goal.metal */,
-				AB6BF5302E4E8646005D2464 /* Board.hpp */,
-				AB9C78B22E4E84D4008C90FD /* Board.metal */,
-				AB6BF53F2E4EE7AA005D2464 /* goalForCellAt.metal */,
-				AB46BB242E4A8ECD00D391C3 /* tick.metal */,
-				AB6BF5332E4E8B08005D2464 /* render texture.metal */,
+				AB6BF5482E4EEB7A005D2464 /* shaders */,
 				AB2426E52E4A8BA2004A7AC0 /* assets */,
 				AB2426CF2E4A8B95004A7AC0 /* Products */,
 			);
@@ -102,6 +92,24 @@
 				AB2426DD2E4A8B9D004A7AC0 /* Assets.xcassets */,
 			);
 			path = assets;
+			sourceTree = "<group>";
+		};
+		AB6BF5482E4EEB7A005D2464 /* shaders */ = {
+			isa = PBXGroup;
+			children = (
+				AB9C78AC2E4E806A008C90FD /* Position.hpp */,
+				AB9C78AA2E4E803D008C90FD /* Position.metal */,
+				AB9C78AD2E4E83D1008C90FD /* RNG.hpp */,
+				AB9C78AE2E4E83DA008C90FD /* RNG.metal */,
+				AB9C78B42E4E85AA008C90FD /* Goal.hpp */,
+				AB9C78B02E4E84CF008C90FD /* Goal.metal */,
+				AB6BF5302E4E8646005D2464 /* Board.hpp */,
+				AB9C78B22E4E84D4008C90FD /* Board.metal */,
+				AB6BF53F2E4EE7AA005D2464 /* goalForCellAt.metal */,
+				AB46BB242E4A8ECD00D391C3 /* tick.metal */,
+				AB6BF5332E4E8B08005D2464 /* render texture.metal */,
+			);
+			path = shaders;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -1,8 +1,5 @@
 #include <metal_stdlib>
-#include "SharedTypes.hpp"
-#include "Position.hpp"
-#include "RNG.hpp"
-#include "Goal.hpp"
+#include "../SharedTypes.hpp"
 #include "Board.hpp"
 
 using namespace metal;

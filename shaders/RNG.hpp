@@ -1,6 +1,8 @@
 #ifndef RNG_hpp
 #define RNG_hpp
 
+#include "Position.hpp"
+
 struct RNG {
 	Position position;
 	unsigned int frameNumber;

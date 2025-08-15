@@ -1,7 +1,7 @@
 #ifndef Board_hpp
 #define Board_hpp
 
-#include "SharedTypes.hpp"
+#include "../SharedTypes.hpp"
 #include "Goal.hpp"
 
 struct Board {
