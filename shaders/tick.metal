@@ -6,7 +6,7 @@ using namespace metal;
 
 float4 colorFor(Pixel pixel) {
 	switch (pixel) {
-		case Pixel::border:
+		case Pixel::outOfBounds:
 			return float4(1, 1, 1, 1);
 		case Pixel::air:
 			return float4(0, 0, 0, 1);

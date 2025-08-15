@@ -13,11 +13,15 @@ Board::Board(
 
 bool Board::containsPosition(Position position) {
 	return position.x >= 0 && position.x < size.x &&
-	position.y >= 0 && position.y < size.y;
+	       position.y >= 0 && position.y < size.y;
 }
 
 Pixel Board::pixelAt(Position position) {
-	return pixels[position.y * size.x + position.x];
+	if (containsPosition(position)) {
+		return pixels[position.y * size.x + position.x];
+	} else {
+		return Pixel::outOfBounds;
+	}
 }
 
 void Board::setPixelTo(Position position, Pixel newValue) {

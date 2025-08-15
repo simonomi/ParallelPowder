@@ -181,7 +181,7 @@ class Renderer: NSObject, MTKViewDelegate {
 							let newX = x + xOffset
 							let newY = y + yOffset
 							
-							if 0 < newX, newX < width, 0 < newY, newY < height {
+							if 0 <= newX, newX < width, 0 <= newY, newY < height {
 								if pointer[newY * width + newX] == drawCanvas {
 									pointer[newY * width + newX] = drawPaint
 								}

@@ -6,7 +6,7 @@
 #endif
 
 enum struct Pixel: uint8_t {
-	border, air, sand, water
+	outOfBounds, air, sand, water
 };
 
 #endif /* Pixel_hpp */
