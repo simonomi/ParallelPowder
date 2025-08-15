@@ -21,13 +21,17 @@ RNG::RNG(
 	repetition(0)
 {}
 
-// returns an int [0, maximum]
-int RNG::generateUpTo(int maximum) {
+/// returns true with a 1/denominator chance
+bool RNG::oneChanceIn(int denominator) {
+	if (denominator == 1) { return true; }
+	
 	repetition += 1;
 	
-	return rand(
+	float zeroToDenominator = rand(
 		position.x + repetition,
 		position.y + repetition,
 		frameNumber + repetition
-	) * float(maximum + 1);
+	) * float(denominator);
+	
+	return zeroToDenominator < 1;
 }

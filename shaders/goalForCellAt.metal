@@ -46,17 +46,17 @@ constant GoalAndCriteria sandGoals[] = {
 };
 
 Goal Board::goalForCellAt(Position position, unsigned int frameNumber) {
-	constant GoalAndCriteria* whatever;
-	int whateverCount;
+	constant GoalAndCriteria* goals;
+	int goalCount;
 	
 	switch (pixelAt(position)) {
 		case Pixel::sand:
-			whatever = sandGoals;
-			whateverCount = sizeof(sandGoals) / sizeof(*sandGoals);
+			goals = sandGoals;
+			goalCount = sizeof(sandGoals) / sizeof(*sandGoals);
 			break;
 		default:
-			whatever = {};
-			whateverCount = 0;
+			goals = {};
+			goalCount = 0;
 			break;
 	}
 	
@@ -65,12 +65,12 @@ Goal Board::goalForCellAt(Position position, unsigned int frameNumber) {
 	Goal currentGoal = Goal::changeTo(pixelAt(position), 0);
 	int numberConsidered = 0;
 	
-	for (int i = 0; i < whateverCount; i += 1) {
-		if (!whatever[i].criteria(*this, position)) {
+	for (int i = 0; i < goalCount; i += 1) {
+		if (!goals[i].criteria(*this, position)) {
 			continue; // this goal's criteria is not met
 		}
 		
-		Goal candidateGoal = whatever[i].goal(position);
+		Goal candidateGoal = goals[i].goal(position);
 		
 		if (candidateGoal.priority < currentGoal.priority) {
 			break; // because goals are sorted by priority
@@ -82,7 +82,7 @@ Goal Board::goalForCellAt(Position position, unsigned int frameNumber) {
 		if (candidateGoal.priority > currentGoal.priority) {
 			currentGoal = candidateGoal;
 			numberConsidered = 1;
-		} else if (rng.generateUpTo(numberConsidered) == 0) {
+		} else if (rng.oneChanceIn(numberConsidered)) {
 			// each candidate has a (1/index) chance of winning,
 			// which is equivalent to randomly selecting one
 			currentGoal = candidateGoal;

@@ -13,7 +13,8 @@ struct RNG {
 		unsigned int inputFrameNumber
 	);
 	
-	int generateUpTo(int maximum);
+	/// returns true with a 1/denominator chance
+	bool oneChanceIn(int denominator);
 };
 
 #endif /* RNG_hpp */

@@ -49,13 +49,13 @@ Position Board::whoGetsToSwapTo(Position position, unsigned int frameNumber) {
 					numberConsidered = 1;
 					currentWinner = candidate;
 				} else if (goal.priority == highestPriority) {
+					numberConsidered += 1;
+					
 					// each candidate has a (1/index) chance of winning,
 					// which is equivalent to randomly selecting one
-					if (rng.generateUpTo(numberConsidered) == 0) {
+					if (rng.oneChanceIn(numberConsidered)) {
 						currentWinner = candidate;
 					}
-					
-					numberConsidered += 1;
 				}
 			}
 		}
