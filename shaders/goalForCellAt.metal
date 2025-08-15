@@ -101,7 +101,9 @@ Goal Board::goalForCellAt(Position position, unsigned int frameNumber) {
 			goals = waterGoals;
 			goalCount = sizeof(waterGoals) / sizeof(*waterGoals);
 			break;
-		default:
+		case Pixel::outOfBounds:
+		case Pixel::air:
+		case Pixel::block:
 			goals = {};
 			goalCount = 0;
 			break;

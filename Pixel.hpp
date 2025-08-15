@@ -6,7 +6,7 @@
 #endif
 
 enum struct Pixel: uint8_t {
-	outOfBounds, air, sand, water
+	outOfBounds, air, sand, water, block
 };
 
 int densityOf(Pixel pixel);

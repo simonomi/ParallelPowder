@@ -11,7 +11,8 @@ int densityOf(Pixel pixel) {
 			return 2;
 		case Pixel::water:
 			return 1;
-		default:
+		case Pixel::outOfBounds:
+		case Pixel::block:
 			return 999;
 	}
 }

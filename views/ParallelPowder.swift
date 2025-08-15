@@ -28,6 +28,8 @@ struct ParallelPowder: App {
 					if drawPaint == .sand {
 						drawPaint = .water
 					} else if drawPaint == .water {
+						drawPaint = .block
+					} else if drawPaint == .block {
 						drawPaint = .sand
 					}
 					
