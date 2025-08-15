@@ -24,7 +24,7 @@ constant GoalAndCriteria sandGoals[] = {
 			return Goal::swapWith(position.offsetBy(0, -1), 1);
 		},
 		[](Board board, Position position) {
-			return board.pixelAt(position.offsetBy(0, -1)) == Pixel::air;
+			return densityOf(board.pixelAt(position.offsetBy(0, -1))) < densityOf(Pixel::sand);
 		}
 	},
 	GoalAndCriteria {
@@ -32,7 +32,7 @@ constant GoalAndCriteria sandGoals[] = {
 			return Goal::swapWith(position.offsetBy(-1, -1), 1);
 		},
 		[](Board board, Position position) {
-			return board.pixelAt(position.offsetBy(-1, -1)) == Pixel::air;
+			return densityOf(board.pixelAt(position.offsetBy(-1, -1))) < densityOf(Pixel::sand);
 		}
 	},
 	GoalAndCriteria {
@@ -40,7 +40,50 @@ constant GoalAndCriteria sandGoals[] = {
 			return Goal::swapWith(position.offsetBy(1, -1), 1);
 		},
 		[](Board board, Position position) {
-			return board.pixelAt(position.offsetBy(1, -1)) == Pixel::air;
+			return densityOf(board.pixelAt(position.offsetBy(1, -1))) < densityOf(Pixel::sand);
+		}
+	}
+};
+
+constant GoalAndCriteria waterGoals[] = {
+	GoalAndCriteria {
+		[](Position position) {
+			return Goal::swapWith(position.offsetBy(0, -1), 2);
+		},
+		[](Board board, Position position) {
+			return densityOf(board.pixelAt(position.offsetBy(0, -1))) < densityOf(Pixel::water);
+		}
+	},
+	GoalAndCriteria {
+		[](Position position) {
+			return Goal::swapWith(position.offsetBy(-1, -1), 2);
+		},
+		[](Board board, Position position) {
+			return densityOf(board.pixelAt(position.offsetBy(-1, -1))) < densityOf(Pixel::water);
+		}
+	},
+	GoalAndCriteria {
+		[](Position position) {
+			return Goal::swapWith(position.offsetBy(1, -1), 2);
+		},
+		[](Board board, Position position) {
+			return densityOf(board.pixelAt(position.offsetBy(1, -1))) < densityOf(Pixel::water);
+		}
+	},
+	GoalAndCriteria {
+		[](Position position) {
+			return Goal::swapWith(position.offsetBy(-1, 0), 1);
+		},
+		[](Board board, Position position) {
+			return densityOf(board.pixelAt(position.offsetBy(-1, 0))) < densityOf(Pixel::water);
+		}
+	},
+	GoalAndCriteria {
+		[](Position position) {
+			return Goal::swapWith(position.offsetBy(1, 0), 1);
+		},
+		[](Board board, Position position) {
+			return densityOf(board.pixelAt(position.offsetBy(1, 0))) < densityOf(Pixel::water);
 		}
 	}
 };
@@ -53,6 +96,10 @@ Goal Board::goalForCellAt(Position position, unsigned int frameNumber) {
 		case Pixel::sand:
 			goals = sandGoals;
 			goalCount = sizeof(sandGoals) / sizeof(*sandGoals);
+			break;
+		case Pixel::water:
+			goals = waterGoals;
+			goalCount = sizeof(waterGoals) / sizeof(*waterGoals);
 			break;
 		default:
 			goals = {};

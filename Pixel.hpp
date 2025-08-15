@@ -9,4 +9,6 @@ enum struct Pixel: uint8_t {
 	outOfBounds, air, sand, water
 };
 
+int densityOf(Pixel pixel);
+
 #endif /* Pixel_hpp */
