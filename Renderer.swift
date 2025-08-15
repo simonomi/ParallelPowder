@@ -15,6 +15,8 @@ class Renderer: NSObject, MTKViewDelegate {
 	var device: MTLDevice
 	var commandQueue: MTLCommandQueue
 	
+	let tickPipeline: MTLComputePipelineState
+	let drawBoardPipeline: MTLComputePipelineState
 	let copyPipeline: MTLRenderPipelineState
 	
 	let uniformsBuffer: MTLBuffer
@@ -25,10 +27,17 @@ class Renderer: NSObject, MTKViewDelegate {
 	
 	var currentSize: CGSize
 	
+	var threadGridSize: MTLSize
+	var threadsPerThreadgroup: MTLSize
+	
 	init(metalKitView: MTKView) {
 		device = metalKitView.device!
 		commandQueue = device.makeCommandQueue()!
 		
+		let library = device.makeDefaultLibrary()!
+		
+		tickPipeline = Self.buildTickPipeline(device, library)
+		drawBoardPipeline = Self.buildDrawBoardPipeline(device, library)
 		copyPipeline = Self.buildCopyPipeline(device, metalKitView)
 		
 		var initialUniforms = Uniforms(
@@ -45,7 +54,19 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		currentSize = metalKitView.drawableSize
 		
+		(threadGridSize, threadsPerThreadgroup) = Self.threadSizes(for: currentSize)
+		
 		super.init()
+	}
+	
+	static func buildTickPipeline(_ device: MTLDevice, _ library: MTLLibrary) -> MTLComputePipelineState {
+		let tick = library.makeFunction(name: "tick")!
+		return try! device.makeComputePipelineState(function: tick)
+	}
+	
+	static func buildDrawBoardPipeline(_ device: MTLDevice, _ library: MTLLibrary) -> MTLComputePipelineState {
+		let drawBoard = library.makeFunction(name: "drawBoard")!
+		return try! device.makeComputePipelineState(function: drawBoard)
 	}
 	
 	static func buildCopyPipeline(_ device: MTLDevice, _ metalKitView: MTKView) -> MTLRenderPipelineState {
@@ -59,12 +80,23 @@ class Renderer: NSObject, MTKViewDelegate {
 		return try! device.makeRenderPipelineState(descriptor: pipelineDescriptor)
 	}
 	
+	static func threadSizes(for viewSize: CGSize) -> (MTLSize, MTLSize) {
+		let threadsPerThreadgroup = MTLSize(width: 8, height: 8, depth: 1)
+		let threadGridSize = MTLSize(
+			width: Int(viewSize.width) / threadsPerThreadgroup.width + 1,
+			height: Int(viewSize.height) / threadsPerThreadgroup.height + 1,
+			depth: 1
+		)
+		return (threadGridSize, threadsPerThreadgroup)
+	}
+	
 	func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
 		currentSize = size
+		(threadGridSize, threadsPerThreadgroup) = Self.threadSizes(for: currentSize)
 		
 		let (width, height) = (Int(size.width), Int(size.height))
 		
-		print(width, height)
+		print("resized to \(width)x\(height)")
 		
 		let textureDescriptor = MTLTextureDescriptor()
 		textureDescriptor.pixelFormat = view.colorPixelFormat
@@ -84,10 +116,10 @@ class Renderer: NSObject, MTKViewDelegate {
 			)!
 		}
 		
-		updateUniforms(size: size)
+		updateUniforms(to: size)
 	}
 	
-	func updateUniforms(size: CGSize) {
+	func updateUniforms(to size: CGSize) {
 		uniformsBuffer.contents()
 			.withMemoryRebound(to: Uniforms.self, capacity: 1) { uniforms in
 				uniforms.pointee.width = UInt32(size.width)
@@ -98,6 +130,8 @@ class Renderer: NSObject, MTKViewDelegate {
 	}
 	
 	func draw(in view: MTKView) {
+		precondition(view.drawableSize == currentSize)
+		
 		guard let drawable = view.currentDrawable else { return }
 		
 		processInput()
@@ -109,38 +143,34 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		let commandBuffer = commandQueue.makeCommandBuffer()!
 		
-		let library = device.makeDefaultLibrary()!
 		if !isPaused {
-			// tick
-			let tick = library.makeFunction(name: "tick")!
-			let computePipelineState = try! device.makeComputePipelineState(function: tick)
-			
-			let computeEncoder = commandBuffer.makeComputeCommandEncoder()!
-			
-			computeEncoder.setBuffer(uniformsBuffer, offset: 0, index: 0)
-			computeEncoder.setBuffer(boards[0], offset: 0, index: 1)
-			computeEncoder.setBuffer(boards[1], offset: 0, index: 2)
-			
-			computeEncoder.setComputePipelineState(computePipelineState)
-			
-			let (width, height) = (Int(view.drawableSize.width), Int(view.drawableSize.height))
-			let threadsPerThreadgroup = MTLSize(width: 8, height: 8, depth: 1)
-			let threadGridSize = MTLSize(
-				width: width / threadsPerThreadgroup.width + 1,
-				height: height / threadsPerThreadgroup.height + 1,
-				depth: 1
-			)
-			computeEncoder.dispatchThreadgroups(threadGridSize, threadsPerThreadgroup: threadsPerThreadgroup)
-			
-			computeEncoder.endEncoding()
-			
+			tick(commandBuffer)
 			boards.swapAt(0, 1)
 		}
 		
-		// drawBoard
-		let drawBoard = library.makeFunction(name: "drawBoard")!
-		let computePipelineState = try! device.makeComputePipelineState(function: drawBoard)
+		drawBoard(commandBuffer)
+			
+		render(view, commandBuffer)
 		
+		commandBuffer.present(drawable)
+		commandBuffer.commit()
+	}
+	
+	func tick(_ commandBuffer: any MTLCommandBuffer) {
+		let computeEncoder = commandBuffer.makeComputeCommandEncoder()!
+		
+		computeEncoder.setBuffer(uniformsBuffer, offset: 0, index: 0)
+		computeEncoder.setBuffer(boards[0], offset: 0, index: 1)
+		computeEncoder.setBuffer(boards[1], offset: 0, index: 2)
+		
+		computeEncoder.setComputePipelineState(tickPipeline)
+		
+		computeEncoder.dispatchThreadgroups(threadGridSize, threadsPerThreadgroup: threadsPerThreadgroup)
+		
+		computeEncoder.endEncoding()
+	}
+	
+	func drawBoard(_ commandBuffer: any MTLCommandBuffer) {
 		let computeEncoder = commandBuffer.makeComputeCommandEncoder()!
 		
 		computeEncoder.setBuffer(uniformsBuffer, offset: 0, index: 0)
@@ -148,20 +178,14 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		computeEncoder.setTexture(displayBuffer, index: 0)
 		
-		computeEncoder.setComputePipelineState(computePipelineState)
+		computeEncoder.setComputePipelineState(drawBoardPipeline)
 		
-		let (width, height) = (Int(view.drawableSize.width), Int(view.drawableSize.height))
-		let threadsPerThreadgroup = MTLSize(width: 8, height: 8, depth: 1)
-		let threadGridSize = MTLSize(
-			width: width / threadsPerThreadgroup.width + 1,
-			height: height / threadsPerThreadgroup.height + 1,
-			depth: 1
-		)
 		computeEncoder.dispatchThreadgroups(threadGridSize, threadsPerThreadgroup: threadsPerThreadgroup)
 		
 		computeEncoder.endEncoding()
-			
-		// render stuff
+	}
+	
+	func render(_ view: MTKView, _ commandBuffer: any MTLCommandBuffer) {
 		let renderPassDescriptor = view.currentRenderPassDescriptor!
 		
 		renderPassDescriptor.colorAttachments[0].loadAction = .dontCare
@@ -169,14 +193,13 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
 		
+		// TODO: could i have the fragment texture take an arbitrary buffer?
+		// then it could just draw the frame itself, instead of having to drawBoard to a texture first
 		renderEncoder.setRenderPipelineState(copyPipeline)
 		renderEncoder.setFragmentTexture(displayBuffer, index: 0)
 		renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
 		
 		renderEncoder.endEncoding()
-		
-		commandBuffer.present(drawable)
-		commandBuffer.commit()
 	}
 	
 	func processInput() {
