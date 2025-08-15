@@ -2,13 +2,13 @@
 #define RNG_hpp
 
 struct RNG {
-	unsigned int frameNumber;
 	Position position;
+	unsigned int frameNumber;
 	int repetition;
 	
 	RNG(
-		unsigned int inputFrameNumber,
-		Position inputPosition
+		Position inputPosition,
+		unsigned int inputFrameNumber
 	);
 	
 	int generateUpTo(int maximum);

@@ -19,7 +19,7 @@ struct Board {
 	
 	void setPixelTo(Position position, Pixel newValue);
 	
-	Goal goalForCellAt(Position position);
+	Goal goalForCellAt(Position position, unsigned int frameNumber);
 	
 	/// should only be called if `position` is the target of at least one swap
 	Position whoGetsToSwapTo(Position position, unsigned int frameNumber);

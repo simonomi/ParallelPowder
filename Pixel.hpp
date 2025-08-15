@@ -9,6 +9,4 @@ enum struct Pixel: uint8_t {
 	border, air, sand, water
 };
 
-float4 colorFor(Pixel pixel);
-
 #endif /* Pixel_hpp */

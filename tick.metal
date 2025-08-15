@@ -7,6 +7,21 @@
 
 using namespace metal;
 
+float4 colorFor(Pixel pixel) {
+	switch (pixel) {
+		case Pixel::border:
+			return float4(1, 1, 1, 1);
+		case Pixel::air:
+			return float4(0, 0, 0, 1);
+		case Pixel::sand:
+			return float4(1, 0.9, 0.8, 1);
+		case Pixel::water:
+			return float4(0, 0.4, 0.6, 1);
+		default:
+			return float4(1, 0, 1, 1);
+	}
+}
+
 kernel void tick(
 	uint2 tid [[thread_position_in_grid]],
 	constant const Uniforms* uniforms [[buffer(0)]],
@@ -23,7 +38,7 @@ kernel void tick(
 	Board previous { previousTick, uniforms };
 	Board current { currentTick, uniforms };
 	
-	Goal myGoal = previous.goalForCellAt(position);
+	Goal myGoal = previous.goalForCellAt(position, uniforms->frameNumber);
 	
 	switch (myGoal.kind) {
 		case Goal::Kind::change: {
@@ -38,7 +53,9 @@ kernel void tick(
 			break;
 		}
 		case Goal::Kind::swap: {
-			if (previous.goalForCellAt(myGoal.data.target).kind == Goal::Kind::swap) {
+			Goal targetsGoal = previous.goalForCellAt(myGoal.data.target, uniforms->frameNumber);
+			
+			if (targetsGoal.kind == Goal::Kind::swap) {
 				current.setPixelTo(position, previous.pixelAt(position));
 				break;
 			}

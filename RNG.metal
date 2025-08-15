@@ -14,11 +14,11 @@ float rand(int x, int y, int z) {
 
 // TODO: include more seeds to prevent repetition
 RNG::RNG(
-	unsigned int inputFrameNumber,
-	Position inputPosition
+	Position inputPosition,
+	unsigned int inputFrameNumber
 ) :
-	frameNumber(inputFrameNumber),
 	position(inputPosition),
+	frameNumber(inputFrameNumber),
 	repetition(0)
 {}
 
@@ -27,8 +27,8 @@ int RNG::generateUpTo(int maximum) {
 	repetition += 1;
 	
 	return rand(
-		frameNumber + repetition,
 		position.x + repetition,
-		position.y + repetition
+		position.y + repetition,
+		frameNumber + repetition
 	) * float(maximum + 1);
 }
