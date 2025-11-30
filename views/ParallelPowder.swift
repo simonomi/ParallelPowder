@@ -3,6 +3,7 @@ import SwiftUI
 @main
 struct ParallelPowder: App {
 	@FocusState private var isFocused: Bool
+	@State private var cursorIsHidden: Bool = false
 	
 	var body: some Scene {
 		WindowGroup {
@@ -51,6 +52,16 @@ struct ParallelPowder: App {
 					if radius > 0 {
 						radius -= 1
 						print("radius", radius)
+					}
+					
+					return .handled
+				}
+				.onKeyPress("h") {
+					cursorIsHidden.toggle()
+					if cursorIsHidden {
+						NSCursor.hide()
+					} else {
+						NSCursor.unhide()
 					}
 					
 					return .handled

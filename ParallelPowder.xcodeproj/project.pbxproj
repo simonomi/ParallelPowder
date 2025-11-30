@@ -9,13 +9,14 @@
 /* Begin PBXBuildFile section */
 		AB2426E22E4A8B9D004A7AC0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB2426DD2E4A8B9D004A7AC0 /* Assets.xcassets */; };
 		AB2426E42E4A8B9D004A7AC0 /* ParallelPowder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2426E02E4A8B9D004A7AC0 /* ParallelPowder.swift */; };
-		AB46BB252E4A8ECD00D391C3 /* tick.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB46BB242E4A8ECD00D391C3 /* tick.metal */; };
+		AB46BB252E4A8ECD00D391C3 /* makeGoals.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB46BB242E4A8ECD00D391C3 /* makeGoals.metal */; };
 		AB46BB272E4A963D00D391C3 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB46BB262E4A963D00D391C3 /* Renderer.swift */; };
 		AB46BB2F2E4A9DB000D391C3 /* MetalMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB46BB2E2E4A9DB000D391C3 /* MetalMapView.swift */; };
 		AB6BF5342E4E8B08005D2464 /* fullScreenVertices.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB6BF5332E4E8B08005D2464 /* fullScreenVertices.metal */; };
 		AB6BF5402E4EE7AA005D2464 /* goalForCellAt.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB6BF53F2E4EE7AA005D2464 /* goalForCellAt.metal */; };
 		AB6BF54A2E4EF90A005D2464 /* Pixel.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB6BF5492E4EF90A005D2464 /* Pixel.metal */; };
 		AB6BF54E2E4F1147005D2464 /* drawBoard.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB6BF54D2E4F1147005D2464 /* drawBoard.metal */; };
+		AB76860C2EDD0F0F0001840A /* updatePixels.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB76860B2EDD0F0F0001840A /* updatePixels.metal */; };
 		AB9C78AB2E4E803D008C90FD /* Position.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB9C78AA2E4E803D008C90FD /* Position.metal */; };
 		AB9C78AF2E4E83DA008C90FD /* RNG.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB9C78AE2E4E83DA008C90FD /* RNG.metal */; };
 		AB9C78B12E4E84CF008C90FD /* Goal.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB9C78B02E4E84CF008C90FD /* Goal.metal */; };
@@ -27,7 +28,7 @@
 		AB2426DD2E4A8B9D004A7AC0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AB2426DF2E4A8B9D004A7AC0 /* ParallelPowder.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ParallelPowder.entitlements; sourceTree = "<group>"; };
 		AB2426E02E4A8B9D004A7AC0 /* ParallelPowder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParallelPowder.swift; sourceTree = "<group>"; };
-		AB46BB242E4A8ECD00D391C3 /* tick.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = tick.metal; sourceTree = "<group>"; };
+		AB46BB242E4A8ECD00D391C3 /* makeGoals.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = makeGoals.metal; sourceTree = "<group>"; };
 		AB46BB262E4A963D00D391C3 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		AB46BB2E2E4A9DB000D391C3 /* MetalMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalMapView.swift; sourceTree = "<group>"; };
 		AB6BF5302E4E8646005D2464 /* Board.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Board.hpp; sourceTree = "<group>"; };
@@ -38,6 +39,7 @@
 		AB6BF5492E4EF90A005D2464 /* Pixel.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Pixel.metal; sourceTree = "<group>"; };
 		AB6BF54D2E4F1147005D2464 /* drawBoard.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = drawBoard.metal; sourceTree = "<group>"; };
 		AB6BF54F2E4F116D005D2464 /* VertexShaderResult.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VertexShaderResult.hpp; sourceTree = "<group>"; };
+		AB76860B2EDD0F0F0001840A /* updatePixels.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = updatePixels.metal; sourceTree = "<group>"; };
 		AB9C78AA2E4E803D008C90FD /* Position.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Position.metal; sourceTree = "<group>"; };
 		AB9C78AC2E4E806A008C90FD /* Position.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Position.hpp; sourceTree = "<group>"; };
 		AB9C78AD2E4E83D1008C90FD /* RNG.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RNG.hpp; sourceTree = "<group>"; };
@@ -105,14 +107,15 @@
 			children = (
 				AB9C78AC2E4E806A008C90FD /* Position.hpp */,
 				AB9C78AA2E4E803D008C90FD /* Position.metal */,
-				AB9C78AD2E4E83D1008C90FD /* RNG.hpp */,
-				AB9C78AE2E4E83DA008C90FD /* RNG.metal */,
 				AB9C78B42E4E85AA008C90FD /* Goal.hpp */,
 				AB9C78B02E4E84CF008C90FD /* Goal.metal */,
+				AB9C78AD2E4E83D1008C90FD /* RNG.hpp */,
+				AB9C78AE2E4E83DA008C90FD /* RNG.metal */,
 				AB6BF5302E4E8646005D2464 /* Board.hpp */,
 				AB9C78B22E4E84D4008C90FD /* Board.metal */,
 				AB6BF53F2E4EE7AA005D2464 /* goalForCellAt.metal */,
-				AB46BB242E4A8ECD00D391C3 /* tick.metal */,
+				AB46BB242E4A8ECD00D391C3 /* makeGoals.metal */,
+				AB76860B2EDD0F0F0001840A /* updatePixels.metal */,
 				AB6BF54F2E4F116D005D2464 /* VertexShaderResult.hpp */,
 				AB6BF5332E4E8B08005D2464 /* fullScreenVertices.metal */,
 				AB6BF54D2E4F1147005D2464 /* drawBoard.metal */,
@@ -150,7 +153,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1640;
-				LastUpgradeCheck = 1640;
+				LastUpgradeCheck = 2610;
 				TargetAttributes = {
 					AB2426CD2E4A8B95004A7AC0 = {
 						CreatedOnToolsVersion = 16.4;
@@ -195,7 +198,7 @@
 				AB6BF5342E4E8B08005D2464 /* fullScreenVertices.metal in Sources */,
 				AB46BB272E4A963D00D391C3 /* Renderer.swift in Sources */,
 				AB9C78B12E4E84CF008C90FD /* Goal.metal in Sources */,
-				AB46BB252E4A8ECD00D391C3 /* tick.metal in Sources */,
+				AB46BB252E4A8ECD00D391C3 /* makeGoals.metal in Sources */,
 				AB46BB2F2E4A9DB000D391C3 /* MetalMapView.swift in Sources */,
 				AB9C78B32E4E84D4008C90FD /* Board.metal in Sources */,
 				AB9C78AB2E4E803D008C90FD /* Position.metal in Sources */,
@@ -203,6 +206,7 @@
 				AB6BF54A2E4EF90A005D2464 /* Pixel.metal in Sources */,
 				AB9C78AF2E4E83DA008C90FD /* RNG.metal in Sources */,
 				AB6BF54E2E4F1147005D2464 /* drawBoard.metal in Sources */,
+				AB76860C2EDD0F0F0001840A /* updatePixels.metal in Sources */,
 				AB6BF5402E4EE7AA005D2464 /* goalForCellAt.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -244,6 +248,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 227FGD37B4;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -267,6 +272,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -306,6 +312,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 227FGD37B4;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -322,6 +329,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
 			name = Release;
@@ -334,9 +342,12 @@
 				CODE_SIGN_ENTITLEMENTS = ParallelPowder.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 227FGD37B4;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -375,9 +386,12 @@
 				CODE_SIGN_ENTITLEMENTS = ParallelPowder.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 227FGD37B4;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;

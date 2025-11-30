@@ -22,7 +22,11 @@ struct Board {
 	Goal goalForCellAt(Position position, unsigned int frameNumber);
 	
 	/// should only be called if `position` is the target of at least one swap
-	Position whoGetsToSwapTo(Position position, unsigned int frameNumber);
+	Position whoGetsToSwapTo(
+		Position position,
+		constant const Goal* goals,
+		unsigned int frameNumber
+	);
 };
 
 #endif /* Board_hpp */

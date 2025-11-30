@@ -1,4 +1,3 @@
-#ifdef __METAL__
 #include <metal_stdlib>
 #include "../Pixel.hpp"
 #include "Goal.hpp"
@@ -36,4 +35,3 @@ Goal::Goal(
 	data(inputData),
 	priority(inputPriority)
 {}
-#endif

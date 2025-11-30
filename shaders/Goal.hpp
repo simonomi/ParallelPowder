@@ -4,14 +4,14 @@
 #include "Position.hpp"
 
 struct Goal {
-	enum struct Kind { change, swap } kind;
+	int priority;
 	
 	union Data {
 		Pixel newPixel;
 		Position target;
 	} data;
 	
-	int priority;
+	enum struct Kind { change, swap } kind;
 	
 	static Goal changeTo(
 		Pixel newPixel,

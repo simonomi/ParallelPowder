@@ -18,12 +18,15 @@ class Renderer: NSObject, MTKViewDelegate {
 	var device: MTLDevice
 	var commandQueue: MTLCommandQueue
 	
-	let tickPipeline: MTLComputePipelineState
+	let makeGoalsPipeline: MTLComputePipelineState
+	let updatePixelsPipeline: MTLComputePipelineState
 	let renderPipeline: MTLRenderPipelineState
 	
 	let uniformsBuffer: MTLBuffer
 	
 	var boards: [MTLBuffer]
+	
+	var goalsBuffer: MTLBuffer
 	
 	var currentSize: CGSize
 	
@@ -36,7 +39,8 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		let library = device.makeDefaultLibrary()!
 		
-		tickPipeline = Self.buildTickPipeline(device, library)
+		makeGoalsPipeline = Self.buildMakeGoalsPipeline(device, library)
+		updatePixelsPipeline = Self.buildUpdatePixelsPipeline(device, library)
 		renderPipeline = Self.buildRenderPipeline(device, metalKitView)
 		
 		var initialUniforms = Uniforms(
@@ -51,6 +55,9 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		boards = []
 		
+		
+		goalsBuffer = device.makeBuffer(length: 1)!
+		
 		currentSize = metalKitView.drawableSize
 		
 		(threadGridSize, threadsPerThreadgroup) = Self.threadSizes(for: currentSize)
@@ -58,12 +65,26 @@ class Renderer: NSObject, MTKViewDelegate {
 		super.init()
 	}
 	
-	static func buildTickPipeline(_ device: MTLDevice, _ library: MTLLibrary) -> MTLComputePipelineState {
-		let tick = library.makeFunction(name: "tick")!
-		return try! device.makeComputePipelineState(function: tick)
+	static func buildMakeGoalsPipeline(
+		_ device: MTLDevice,
+		_ library: MTLLibrary
+	) -> MTLComputePipelineState {
+		let makeGoals = library.makeFunction(name: "makeGoals")!
+		return try! device.makeComputePipelineState(function: makeGoals)
 	}
 	
-	static func buildRenderPipeline(_ device: MTLDevice, _ metalKitView: MTKView) -> MTLRenderPipelineState {
+	static func buildUpdatePixelsPipeline(
+		_ device: MTLDevice,
+		_ library: MTLLibrary
+	) -> MTLComputePipelineState {
+		let makeGoals = library.makeFunction(name: "updatePixels")!
+		return try! device.makeComputePipelineState(function: makeGoals)
+	}
+	
+	static func buildRenderPipeline(
+		_ device: MTLDevice,
+		_ metalKitView: MTKView
+	) -> MTLRenderPipelineState {
 		let library = device.makeDefaultLibrary()!
 		
 		let pipelineDescriptor = MTLRenderPipelineDescriptor()
@@ -108,6 +129,10 @@ class Renderer: NSObject, MTKViewDelegate {
 			)!
 		}
 		
+		goalsBuffer = device.makeBuffer(
+			length: width * height * MemoryLayout<Goal>.stride
+		)!
+		
 		updateUniforms(to: size)
 	}
 	
@@ -143,10 +168,10 @@ class Renderer: NSObject, MTKViewDelegate {
 		let commandBuffer = commandQueue.makeCommandBuffer()!
 		
 		if !isPaused {
-			for _ in 0..<10 {
+//			for _ in 0..<5 {
 				tick(commandBuffer)
 				boards.swapAt(0, 1)
-			}
+//			}
 		}
 		
 		render(view, commandBuffer)
@@ -156,13 +181,33 @@ class Renderer: NSObject, MTKViewDelegate {
 	}
 	
 	func tick(_ commandBuffer: any MTLCommandBuffer) {
+		makeGoals(commandBuffer)
+		updatePixels(commandBuffer)
+	}
+	
+	func makeGoals(_ commandBuffer: any MTLCommandBuffer) {
+		let computeEncoder = commandBuffer.makeComputeCommandEncoder()!
+		
+		computeEncoder.setBuffer(uniformsBuffer, offset: 0, index: 0)
+		computeEncoder.setBuffer(boards[0], offset: 0, index: 1)
+		computeEncoder.setBuffer(goalsBuffer, offset: 0, index: 2)
+		
+		computeEncoder.setComputePipelineState(makeGoalsPipeline)
+		
+		computeEncoder.dispatchThreadgroups(threadGridSize, threadsPerThreadgroup: threadsPerThreadgroup)
+		
+		computeEncoder.endEncoding()
+	}
+	
+	func updatePixels(_ commandBuffer: any MTLCommandBuffer) {
 		let computeEncoder = commandBuffer.makeComputeCommandEncoder()!
 		
 		computeEncoder.setBuffer(uniformsBuffer, offset: 0, index: 0)
 		computeEncoder.setBuffer(boards[0], offset: 0, index: 1)
 		computeEncoder.setBuffer(boards[1], offset: 0, index: 2)
+		computeEncoder.setBuffer(goalsBuffer, offset: 0, index: 3)
 		
-		computeEncoder.setComputePipelineState(tickPipeline)
+		computeEncoder.setComputePipelineState(updatePixelsPipeline)
 		
 		computeEncoder.dispatchThreadgroups(threadGridSize, threadsPerThreadgroup: threadsPerThreadgroup)
 		

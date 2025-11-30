@@ -29,7 +29,11 @@ void Board::setPixelTo(Position position, Pixel newValue) {
 }
 
 /// should only be called if `position` is the target of at least one swap
-Position Board::whoGetsToSwapTo(Position position, unsigned int frameNumber) {
+Position Board::whoGetsToSwapTo(
+	Position position,
+	constant const Goal* goals,
+	unsigned int frameNumber
+) {
 	int highestPriority = -1;
 	int numberConsidered = -1;
 	Position currentWinner { -1, -1 };
@@ -38,7 +42,7 @@ Position Board::whoGetsToSwapTo(Position position, unsigned int frameNumber) {
 	for (int y : {-1, 0, 1}) {
 		for (int x : {-1, 0, 1}) {
 			Position candidate = position.offsetBy(x, y);
-			Goal goal = goalForCellAt(candidate, frameNumber);
+			Goal goal = goals[candidate.y * this->size.x + candidate.x];
 			
 			if (
 				(goal.kind == Goal::Kind::swap && goal.data.target == position) ||

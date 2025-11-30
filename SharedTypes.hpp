@@ -3,5 +3,6 @@
 
 #include "Uniforms.hpp"
 #include "Pixel.hpp"
+#include "shaders/Goal.hpp"
 
 #endif /* SharedTypes_hpp */
