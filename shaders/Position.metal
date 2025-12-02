@@ -8,7 +8,7 @@ Position::Position(const int16_t inputX, const int16_t inputY) :
 	y(inputY)
 {}
 	
-Position::Position(const uint2 inputPosition) :
+Position::Position(const ushort2 inputPosition) :
 	x(inputPosition.x),
 	y(inputPosition.y)
 {}

@@ -8,7 +8,7 @@ struct Position {
 	Position(int16_t inputX, int16_t inputY);
 	
 #ifdef __METAL__
-	Position(uint2 inputPosition);
+	Position(ushort2 inputPosition);
 #endif
 	
 	bool operator==(Position other) const;

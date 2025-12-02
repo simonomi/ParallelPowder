@@ -10,7 +10,9 @@
 struct Goal {
 	union Data {
 		Pixel newPixel;
-		Position target;
+		Position target; // could replace with an enum
+						 // _ideally_, we could even bitpack the kind/data together 🤔
+						 // if we're ALU-bound now though, is it still worth making Goals smaller?
 	} data;
 	
 	uint8_t priority;

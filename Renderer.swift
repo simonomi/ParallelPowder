@@ -178,6 +178,8 @@ class Renderer: NSObject, MTKViewDelegate {
 	func makeGoals(_ commandBuffer: any MTLCommandBuffer) {
 		let computeEncoder = commandBuffer.makeComputeCommandEncoder()!
 		
+		computeEncoder.label = "makeGoals"
+		
 		computeEncoder.setBuffer(uniformsBuffer, offset: 0, index: 0)
 		computeEncoder.setBuffer(boards[0], offset: 0, index: 1)
 		computeEncoder.setBuffer(goalsBuffer, offset: 0, index: 2)
@@ -191,6 +193,8 @@ class Renderer: NSObject, MTKViewDelegate {
 	
 	func updatePixels(_ commandBuffer: any MTLCommandBuffer) {
 		let computeEncoder = commandBuffer.makeComputeCommandEncoder()!
+		
+		computeEncoder.label = "updatePixels"
 		
 		computeEncoder.setBuffer(uniformsBuffer, offset: 0, index: 0)
 		computeEncoder.setBuffer(boards[0], offset: 0, index: 1)

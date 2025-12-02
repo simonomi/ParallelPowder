@@ -18,14 +18,14 @@ bool InputBoard::containsPosition(const Position position) const {
 
 Pixel InputBoard::pixelAt(const Position position) const {
 	if (containsPosition(position)) {
-		return pixels[uint(position.y) * uint(size.x) + uint(position.x)];
+		return pixels[int(position.y) * int(size.x) + int(position.x)];
 	} else {
 		return Pixel::outOfBounds;
 	}
 }
 
 Pixel InputBoard::uncheckedPixelAt(const Position position) const {
-	return pixels[uint(position.y) * uint(size.x) + uint(position.x)];
+	return pixels[int(position.y) * int(size.x) + int(position.x)];
 }
 
 /// randomly pick one of the swaps/changes targeting a given pixel
@@ -36,7 +36,7 @@ Position InputBoard::whoGetsToSwapTo(
 	const constant Goal* goals,
 	const uint16_t frameNumber
 ) const {
-	uint8_t numberConsidered = -1;
+	int16_t numberConsidered = -1;
 	Position currentWinner { -1, -1 };
 	RNG rng { position, frameNumber };
 	
@@ -48,7 +48,7 @@ Position InputBoard::whoGetsToSwapTo(
 				continue;
 			}
 			
-			const Goal goal = goals[uint(candidate.y) * uint(this->size.x) + uint(candidate.x)];
+			const Goal goal = goals[int(candidate.y) * int(this->size.x) + int(candidate.x)];
 			
 			if (
 				(goal.kind == Goal::Kind::swap && goal.data.target == position) ||

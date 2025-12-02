@@ -149,7 +149,7 @@ const constant GoalAndCriteria fireGoals[] = {
 
 Goal InputBoard::goalForCellAt(Position position, uint16_t frameNumber) const {
 	const constant GoalAndCriteria* goals;
-	uint8_t goalCount;
+	uint16_t goalCount;
 	
 	switch (uncheckedPixelAt(position)) {
 		case Pixel::air:
@@ -183,9 +183,9 @@ Goal InputBoard::goalForCellAt(Position position, uint16_t frameNumber) const {
 	RNG criteriaRNG { position, frameNumber };
 	
 	Goal currentGoal = Goal::changeTo(uncheckedPixelAt(position), 0);
-	uint8_t numberConsidered = 0;
+	int16_t numberConsidered = 0;
 	
-	for (uint8_t i = 0; i < goalCount; i += 1) {
+	for (int16_t i = 0; i < goalCount; i += 1) {
 		const Goal candidateGoal = goals[i].goal(position);
 		
 		if (candidateGoal.priority < currentGoal.priority) {

@@ -12,5 +12,5 @@ OutputBoard::OutputBoard(
 }
 
 void OutputBoard::setPixelAt(const Position position, const Pixel newValue) {
-	pixels[uint(position.y) * uint(size.x) + uint(position.x)] = newValue;
+	pixels[int(position.y) * int(size.x) + int(position.x)] = newValue;
 }
