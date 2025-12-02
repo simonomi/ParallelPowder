@@ -115,9 +115,8 @@ constant GoalAndCriteria treeGoals[] = {
 			return Goal::changeTo(Pixel::fire, 1);
 		},
 		[](InputBoard board, Position position, RNG rng) {
-			// TODO: make i8?
-			for (int xOffset : {-1, 0, 1}) {
-				for (int yOffset : {-1, 0, 1}) {
+			for (int8_t xOffset : {-1, 0, 1}) {
+				for (int8_t yOffset : {-1, 0, 1}) {
 					if (board.pixelAt(position.offsetBy(xOffset, yOffset)) == Pixel::fire) {
 						return true;
 					}
@@ -150,8 +149,7 @@ constant GoalAndCriteria fireGoals[] = {
 
 Goal InputBoard::goalForCellAt(Position position, unsigned int frameNumber) {
 	constant GoalAndCriteria* goals;
-	// TODO: make u8?
-	unsigned int goalCount;
+	uint8_t goalCount;
 	
 	switch (pixelAt(position)) {
 		case Pixel::air:
@@ -185,9 +183,9 @@ Goal InputBoard::goalForCellAt(Position position, unsigned int frameNumber) {
 	RNG criteriaRNG { position, frameNumber };
 	
 	Goal currentGoal = Goal::changeTo(pixelAt(position), 0);
-	unsigned int numberConsidered = 0;
+	uint8_t numberConsidered = 0;
 	
-	for (unsigned int i = 0; i < goalCount; i += 1) {
+	for (uint8_t i = 0; i < goalCount; i += 1) {
 		Goal candidateGoal = goals[i].goal(position);
 		
 		if (candidateGoal.priority < currentGoal.priority) {

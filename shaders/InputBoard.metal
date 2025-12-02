@@ -39,9 +39,8 @@ Position InputBoard::whoGetsToSwapTo(
 	Position currentWinner { -1, -1 };
 	RNG rng { position, frameNumber };
 	
-	// TODO: make these i8s?
-	for (int y : {-1, 0, 1}) {
-		for (int x : {-1, 0, 1}) {
+	for (int8_t y : {-1, 0, 1}) {
+		for (int8_t x : {-1, 0, 1}) {
 			Position candidate = position.offsetBy(x, y);
 			Goal goal = goals[candidate.y * this->size.x + candidate.x];
 			

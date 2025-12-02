@@ -9,7 +9,6 @@ enum struct Pixel: uint8_t {
 	outOfBounds, air, sand, water, block, tree, fire
 };
 
-// TODO: use u8 instead?
-int densityOf(Pixel pixel);
+uint8_t densityOf(Pixel pixel);
 
 #endif /* Pixel_hpp */

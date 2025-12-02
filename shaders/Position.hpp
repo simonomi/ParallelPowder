@@ -14,7 +14,7 @@ struct Position {
 	
 	bool operator==(Position other);
 	
-	Position offsetBy(int xOffset, int yOffset);
+	Position offsetBy(int8_t xOffset, int8_t yOffset);
 };
 
 #endif /* Position_hpp */

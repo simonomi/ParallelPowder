@@ -55,7 +55,6 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		boards = []
 		
-		
 		goalsBuffer = device.makeBuffer(length: 1)!
 		
 		currentSize = metalKitView.drawableSize

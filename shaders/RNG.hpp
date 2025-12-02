@@ -13,7 +13,6 @@ struct RNG {
 		unsigned int inputFrameNumber
 	);
 	
-	// TODO: can this be a u16 or u8 or smthn?
 	/// returns true with a 1/denominator chance
 	bool oneChanceIn(unsigned int denominator);
 };

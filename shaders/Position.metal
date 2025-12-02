@@ -17,6 +17,6 @@ bool Position::operator==(Position other) {
 	return x == other.x && y == other.y;
 }
 
-Position Position::offsetBy(int xOffset, int yOffset) {
+Position Position::offsetBy(int8_t xOffset, int8_t yOffset) {
 	return Position(x + xOffset, y + yOffset);
 }

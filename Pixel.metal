@@ -3,7 +3,7 @@
 
 using namespace metal;
 
-int densityOf(Pixel pixel) {
+uint8_t densityOf(Pixel pixel) {
 	switch (pixel) {
 		case Pixel::air:
 			return 0;
@@ -15,6 +15,6 @@ int densityOf(Pixel pixel) {
 		case Pixel::block:
 		case Pixel::tree:
 		case Pixel::fire:
-			return 999;
+			return 255;
 	}
 }

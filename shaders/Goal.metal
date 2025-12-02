@@ -7,7 +7,7 @@ using namespace metal;
 
 Goal Goal::changeTo(
 	Pixel newPixel,
-	int priority
+	uint8_t priority
 ) {
 	return Goal(
 		Kind::change,
@@ -18,7 +18,7 @@ Goal Goal::changeTo(
 
 Goal Goal::swapWith(
 	Position target,
-	int priority
+	uint8_t priority
 ) {
 	return Goal(
 		Kind::swap,
@@ -30,7 +30,7 @@ Goal Goal::swapWith(
 Goal::Goal(
 	Kind inputKind,
 	Data inputData,
-	int inputPriority
+	uint8_t inputPriority
 ) :
 	kind(inputKind),
 	data(inputData),
