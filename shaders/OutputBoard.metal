@@ -6,9 +6,9 @@ using namespace metal;
 
 OutputBoard::OutputBoard(
 	device Pixel* inputPixels,
-	constant const Uniforms* uniforms
+	const constant Uniforms& uniforms
 ) : pixels(inputPixels) {
-	size = ushort2(uniforms->width, uniforms->height);
+	size = ushort2(uniforms.width, uniforms.height);
 }
 
 void OutputBoard::setPixelAt(const Position position, const Pixel newValue) {

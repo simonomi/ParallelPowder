@@ -5,10 +5,10 @@
 using namespace metal;
 
 InputBoard::InputBoard(
-	constant const Pixel* inputPixels,
-	constant const Uniforms* uniforms
+	const constant Pixel* inputPixels,
+	const constant Uniforms& uniforms
 ) : pixels(inputPixels) {
-	size = ushort2(uniforms->width, uniforms->height);
+	size = ushort2(uniforms.width, uniforms.height);
 }
 
 bool InputBoard::containsPosition(const Position position) const {
@@ -33,7 +33,7 @@ Pixel InputBoard::uncheckedPixelAt(const Position position) const {
 /// should only be called if `position` is the target of at least one swap (or change)
 Position InputBoard::whoGetsToSwapTo(
 	const Position position,
-	constant const Goal* goals,
+	const constant Goal* goals,
 	const uint16_t frameNumber
 ) const {
 	uint8_t numberConsidered = -1;

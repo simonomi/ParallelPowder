@@ -112,15 +112,6 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		print("resized to \(width)x\(height)")
 		
-		let textureDescriptor = MTLTextureDescriptor()
-		textureDescriptor.pixelFormat = view.colorPixelFormat
-		textureDescriptor.textureType = .type2D
-		textureDescriptor.width = width
-		textureDescriptor.height = height
-		
-		textureDescriptor.storageMode = .private
-		textureDescriptor.usage = [.shaderRead, .shaderWrite]
-		
 		boards = (0..<2).map { _ in
 			device.makeBuffer(
 				bytes: Self.allAir(width: width, height: height),
@@ -132,10 +123,10 @@ class Renderer: NSObject, MTKViewDelegate {
 			length: width * height * MemoryLayout<Goal>.stride
 		)!
 		
-		updateUniforms(to: size)
+		setUniforms(to: size)
 	}
 	
-	func updateUniforms(to size: CGSize) {
+	func setUniforms(to size: CGSize) {
 		uniformsBuffer.contents()
 			.withMemoryRebound(to: Uniforms.self, capacity: 1) { uniforms in
 				uniforms.pointee.width = UInt16(size.width)
@@ -215,9 +206,6 @@ class Renderer: NSObject, MTKViewDelegate {
 	
 	func render(_ view: MTKView, _ commandBuffer: any MTLCommandBuffer) {
 		let renderPassDescriptor = view.currentRenderPassDescriptor!
-		
-		renderPassDescriptor.colorAttachments[0].loadAction = .dontCare
-		renderPassDescriptor.colorAttachments[0].storeAction = .store
 		
 		let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
 		

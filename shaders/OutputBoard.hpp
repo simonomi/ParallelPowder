@@ -10,7 +10,7 @@ struct OutputBoard {
 	
 	OutputBoard(
 		device Pixel* inputPixels,
-		constant const Uniforms* uniforms
+		const constant Uniforms& uniforms
 	);
 	
 	void setPixelAt(Position position, Pixel newValue);

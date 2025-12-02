@@ -17,8 +17,8 @@ struct GoalAndCriteria {
 	{};
 };
 
-constant const unsigned int treeGrowChance = /* 1 in */ 500;
-constant const unsigned int treeBurnChance = /* 1 in */ 100000;
+const constant unsigned int treeGrowChance = /* 1 in */ 500;
+const constant unsigned int treeBurnChance = /* 1 in */ 100000;
 
 // goals must be sorted by priority high->low
 //
@@ -28,7 +28,7 @@ constant const unsigned int treeBurnChance = /* 1 in */ 100000;
 // the default goal of a cell is to change to itself. this means
 // that a cell with no goals _can_ be swapped with
 
-constant const GoalAndCriteria airGoals[] = {
+const constant GoalAndCriteria airGoals[] = {
 	GoalAndCriteria { // grow tree randomly
 		[](Position position) {
 			return Goal::changeTo(Pixel::tree, 1);
@@ -39,7 +39,7 @@ constant const GoalAndCriteria airGoals[] = {
 	}
 };
 
-constant const GoalAndCriteria sandGoals[] = {
+const constant GoalAndCriteria sandGoals[] = {
 	GoalAndCriteria { // fall down
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(0, -1), 1);
@@ -66,7 +66,7 @@ constant const GoalAndCriteria sandGoals[] = {
 	}
 };
 
-constant const GoalAndCriteria waterGoals[] = {
+const constant GoalAndCriteria waterGoals[] = {
 	GoalAndCriteria { // fall down
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(0, -1), 2);
@@ -109,7 +109,7 @@ constant const GoalAndCriteria waterGoals[] = {
 	}
 };
 
-constant const GoalAndCriteria treeGoals[] = {
+const constant GoalAndCriteria treeGoals[] = {
 	GoalAndCriteria { // burn if a neighbor is burning
 		[](Position position) {
 			return Goal::changeTo(Pixel::fire, 1);
@@ -136,7 +136,7 @@ constant const GoalAndCriteria treeGoals[] = {
 	}
 };
 
-constant const GoalAndCriteria fireGoals[] = {
+const constant GoalAndCriteria fireGoals[] = {
 	GoalAndCriteria { // stop burning
 		[](Position position) {
 			return Goal::changeTo(Pixel::air, 1);
@@ -148,7 +148,7 @@ constant const GoalAndCriteria fireGoals[] = {
 };
 
 Goal InputBoard::goalForCellAt(Position position, uint16_t frameNumber) const {
-	constant const GoalAndCriteria* goals;
+	const constant GoalAndCriteria* goals;
 	uint8_t goalCount;
 	
 	switch (uncheckedPixelAt(position)) {

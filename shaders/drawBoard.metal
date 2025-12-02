@@ -24,14 +24,15 @@ float4 colorFor(const Pixel pixel) {
 	}
 }
 
+[[early_fragment_tests]]
 fragment float4 drawBoard(
 	const VertexShaderResult in [[stage_in]],
-	constant const Uniforms* uniforms [[buffer(0)]],
-	constant const Pixel* currentTick [[buffer(1)]]
+	const constant Uniforms& uniforms [[buffer(0)]],
+	const constant Pixel* currentTick [[buffer(1)]]
 ) {
 	const Position position {
-		int16_t(in.uv.x * uniforms->width),
-		int16_t(in.uv.y * uniforms->height)
+		int16_t(in.uv.x * uniforms.width),
+		int16_t(in.uv.y * uniforms.height)
 	};
 	
 	const InputBoard current { currentTick, uniforms };

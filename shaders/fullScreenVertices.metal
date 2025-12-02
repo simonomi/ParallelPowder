@@ -4,7 +4,7 @@
 using namespace metal;
 
 // screen-filling tri-strip
-constant const float2 quadVertices[] = {
+const constant float2 quadVertices[] = {
 	float2(-1, -1),
 	float2(-1,  1),
 	float2( 1, -1),
