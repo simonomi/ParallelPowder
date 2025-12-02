@@ -9,24 +9,24 @@ struct InputBoard {
 	ushort2 size;
 	
 	InputBoard(
-		constant const Pixel* inputPixels,
-		constant const Uniforms* uniforms
+		constant Pixel* inputPixels,
+		constant Uniforms* uniforms
 	);
 	
-	bool containsPosition(Position position);
+	bool containsPosition(Position position) const;
 	
-	Pixel pixelAt(Position position);
+	Pixel pixelAt(Position position) const;
 	
-	Pixel uncheckedPixelAt(Position position);
+	Pixel uncheckedPixelAt(Position position) const;
 	
-	Goal goalForCellAt(Position position, uint16_t frameNumber);
+	Goal goalForCellAt(Position position, uint16_t frameNumber) const;
 	
 	/// should only be called if `position` is the target of at least one swap
 	Position whoGetsToSwapTo(
 		Position position,
-		constant const Goal* goals,
+		constant Goal* goals,
 		uint16_t frameNumber
-	);
+	) const;
 };
 
 #endif /* ConstantBoard_hpp */

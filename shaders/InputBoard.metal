@@ -11,12 +11,12 @@ InputBoard::InputBoard(
 	size = ushort2(uniforms->width, uniforms->height);
 }
 
-bool InputBoard::containsPosition(Position position) {
+bool InputBoard::containsPosition(const Position position) const {
 	return position.x >= 0 && position.x < size.x &&
 	       position.y >= 0 && position.y < size.y;
 }
 
-Pixel InputBoard::pixelAt(Position position) {
+Pixel InputBoard::pixelAt(const Position position) const {
 	if (containsPosition(position)) {
 		return pixels[uint(position.y) * uint(size.x) + uint(position.x)];
 	} else {
@@ -24,7 +24,7 @@ Pixel InputBoard::pixelAt(Position position) {
 	}
 }
 
-Pixel InputBoard::uncheckedPixelAt(Position position) {
+Pixel InputBoard::uncheckedPixelAt(const Position position) const {
 	return pixels[uint(position.y) * uint(size.x) + uint(position.x)];
 }
 
@@ -32,23 +32,23 @@ Pixel InputBoard::uncheckedPixelAt(Position position) {
 ///
 /// should only be called if `position` is the target of at least one swap (or change)
 Position InputBoard::whoGetsToSwapTo(
-	Position position,
+	const Position position,
 	constant const Goal* goals,
-	uint16_t frameNumber
-) {
+	const uint16_t frameNumber
+) const {
 	uint8_t numberConsidered = -1;
 	Position currentWinner { -1, -1 };
 	RNG rng { position, frameNumber };
 	
 	for (int8_t y : {-1, 0, 1}) {
 		for (int8_t x : {-1, 0, 1}) {
-			Position candidate = position.offsetBy(x, y);
+			const Position candidate = position.offsetBy(x, y);
 			
 			if (!containsPosition(candidate)) {
 				continue;
 			}
 			
-			Goal goal = goals[uint(candidate.y) * uint(this->size.x) + uint(candidate.x)];
+			const Goal goal = goals[uint(candidate.y) * uint(this->size.x) + uint(candidate.x)];
 			
 			if (
 				(goal.kind == Goal::Kind::swap && goal.data.target == position) ||

@@ -5,7 +5,7 @@
 
 using namespace metal;
 
-float4 colorFor(Pixel pixel) {
+float4 colorFor(const Pixel pixel) {
 	switch (pixel) {
 		case Pixel::outOfBounds:
 			return float4(1, 0, 1, 1);
@@ -25,16 +25,16 @@ float4 colorFor(Pixel pixel) {
 }
 
 fragment float4 drawBoard(
-	VertexShaderResult in [[stage_in]],
+	const VertexShaderResult in [[stage_in]],
 	constant const Uniforms* uniforms [[buffer(0)]],
 	constant const Pixel* currentTick [[buffer(1)]]
 ) {
-	Position position {
+	const Position position {
 		int16_t(in.uv.x * uniforms->width),
 		int16_t(in.uv.y * uniforms->height)
 	};
 	
-	InputBoard current { currentTick, uniforms };
+	const InputBoard current { currentTick, uniforms };
 	
 	return colorFor(current.pixelAt(position));
 }

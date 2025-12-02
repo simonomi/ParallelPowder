@@ -11,9 +11,9 @@ struct Position {
 	Position(uint2 inputPosition);
 #endif
 	
-	bool operator==(Position other);
+	bool operator==(Position other) const;
 	
-	Position offsetBy(int8_t xOffset, int8_t yOffset);
+	Position offsetBy(int8_t xOffset, int8_t yOffset) const;
 };
 
 #endif /* Position_hpp */

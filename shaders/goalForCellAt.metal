@@ -17,8 +17,8 @@ struct GoalAndCriteria {
 	{};
 };
 
-constant unsigned int treeGrowChance = /* 1 in */ 500;
-constant unsigned int treeBurnChance = /* 1 in */ 100000;
+constant const unsigned int treeGrowChance = /* 1 in */ 500;
+constant const unsigned int treeBurnChance = /* 1 in */ 100000;
 
 // goals must be sorted by priority high->low
 //
@@ -28,7 +28,7 @@ constant unsigned int treeBurnChance = /* 1 in */ 100000;
 // the default goal of a cell is to change to itself. this means
 // that a cell with no goals _can_ be swapped with
 
-constant GoalAndCriteria airGoals[] = {
+constant const GoalAndCriteria airGoals[] = {
 	GoalAndCriteria { // grow tree randomly
 		[](Position position) {
 			return Goal::changeTo(Pixel::tree, 1);
@@ -39,7 +39,7 @@ constant GoalAndCriteria airGoals[] = {
 	}
 };
 
-constant GoalAndCriteria sandGoals[] = {
+constant const GoalAndCriteria sandGoals[] = {
 	GoalAndCriteria { // fall down
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(0, -1), 1);
@@ -66,7 +66,7 @@ constant GoalAndCriteria sandGoals[] = {
 	}
 };
 
-constant GoalAndCriteria waterGoals[] = {
+constant const GoalAndCriteria waterGoals[] = {
 	GoalAndCriteria { // fall down
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(0, -1), 2);
@@ -109,7 +109,7 @@ constant GoalAndCriteria waterGoals[] = {
 	}
 };
 
-constant GoalAndCriteria treeGoals[] = {
+constant const GoalAndCriteria treeGoals[] = {
 	GoalAndCriteria { // burn if a neighbor is burning
 		[](Position position) {
 			return Goal::changeTo(Pixel::fire, 1);
@@ -136,7 +136,7 @@ constant GoalAndCriteria treeGoals[] = {
 	}
 };
 
-constant GoalAndCriteria fireGoals[] = {
+constant const GoalAndCriteria fireGoals[] = {
 	GoalAndCriteria { // stop burning
 		[](Position position) {
 			return Goal::changeTo(Pixel::air, 1);
@@ -147,8 +147,8 @@ constant GoalAndCriteria fireGoals[] = {
 	}
 };
 
-Goal InputBoard::goalForCellAt(Position position, uint16_t frameNumber) {
-	constant GoalAndCriteria* goals;
+Goal InputBoard::goalForCellAt(Position position, uint16_t frameNumber) const {
+	constant const GoalAndCriteria* goals;
 	uint8_t goalCount;
 	
 	switch (uncheckedPixelAt(position)) {
@@ -186,15 +186,13 @@ Goal InputBoard::goalForCellAt(Position position, uint16_t frameNumber) {
 	uint8_t numberConsidered = 0;
 	
 	for (uint8_t i = 0; i < goalCount; i += 1) {
-		Goal candidateGoal = goals[i].goal(position);
+		const Goal candidateGoal = goals[i].goal(position);
 		
 		if (candidateGoal.priority < currentGoal.priority) {
 			break; // because goals are sorted by priority
 				   // the one we have is of the highest priority left
 		}
 		
-		// function groups
-		// [[function_groups("")]]
 		if (!goals[i].criteria(*this, position, criteriaRNG)) {
 			continue; // this goal's criteria is not met
 		}

@@ -6,7 +6,7 @@
 using namespace metal;
 
 kernel void updatePixels(
-	uint2 tid [[thread_position_in_grid]],
+	const uint2 tid [[thread_position_in_grid]],
 	constant const Uniforms* uniforms [[buffer(0)]],
 	constant const Pixel* previousTick [[buffer(1)]],
 	device Pixel* currentTick [[buffer(2)]],
@@ -16,16 +16,16 @@ kernel void updatePixels(
 		return;
 	}
 	
-	Position position { tid };
+	const Position position { tid };
 	
-	InputBoard previous { previousTick, uniforms };
+	const InputBoard previous { previousTick, uniforms };
 	OutputBoard current { currentTick, uniforms };
 	
-	Goal myGoal = goals[uint(position.y) * uint(uniforms->width) + uint(position.x)];
+	const Goal myGoal = goals[uint(position.y) * uint(uniforms->width) + uint(position.x)];
 	
 	switch (myGoal.kind) {
 		case Goal::Kind::change: {
-			Position whoSwaps = previous.whoGetsToSwapTo(
+			const Position whoSwaps = previous.whoGetsToSwapTo(
 				position,
 				goals,
 				uniforms->frameNumber
@@ -40,7 +40,7 @@ kernel void updatePixels(
 			break;
 		}
 		case Goal::Kind::swap: {
-			Goal targetsGoal = goals[myGoal.data.target.y * uniforms->width + myGoal.data.target.x];
+			const Goal targetsGoal = goals[myGoal.data.target.y * uniforms->width + myGoal.data.target.x];
 			
 			// if our target is swapping, do nothing
 			if (targetsGoal.kind == Goal::Kind::swap) {
@@ -48,7 +48,7 @@ kernel void updatePixels(
 				break;
 			}
 			
-			Position whoSwaps = previous.whoGetsToSwapTo(
+			const Position whoSwaps = previous.whoGetsToSwapTo(
 				myGoal.data.target,
 				goals,
 				uniforms->frameNumber

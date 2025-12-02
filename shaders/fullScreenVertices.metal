@@ -4,15 +4,17 @@
 using namespace metal;
 
 // screen-filling tri-strip
-constant float2 quadVertices[] = {
+constant const float2 quadVertices[] = {
 	float2(-1, -1),
 	float2(-1,  1),
 	float2( 1, -1),
 	float2( 1,  1)
 };
 
-vertex VertexShaderResult fullScreenVertices(unsigned short vid [[vertex_id]]) {
-	float2 position = quadVertices[vid];
+vertex VertexShaderResult fullScreenVertices(
+	const unsigned short vid [[vertex_id]]
+) {
+	const float2 position = quadVertices[vid];
 	
 	return VertexShaderResult {
 		float4(position, 0, 1),

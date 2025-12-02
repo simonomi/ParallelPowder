@@ -11,6 +11,6 @@ OutputBoard::OutputBoard(
 	size = ushort2(uniforms->width, uniforms->height);
 }
 
-void OutputBoard::setPixelAt(Position position, Pixel newValue) {
+void OutputBoard::setPixelAt(const Position position, const Pixel newValue) {
 	pixels[uint(position.y) * uint(size.x) + uint(position.x)] = newValue;
 }

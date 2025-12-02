@@ -5,7 +5,7 @@
 using namespace metal;
 
 kernel void makeGoals(
-	uint2 tid [[thread_position_in_grid]],
+	const uint2 tid [[thread_position_in_grid]],
 	constant const Uniforms* uniforms [[buffer(0)]],
 	constant const Pixel* previousTick [[buffer(1)]],
 	device Goal* goals [[buffer(2)]]
@@ -14,11 +14,11 @@ kernel void makeGoals(
 		return;
 	}
 	
-	Position position { tid };
+	const Position position { tid };
 	
-	InputBoard previous { previousTick, uniforms };
+	const InputBoard previous { previousTick, uniforms };
 	
-	Goal myGoal = previous.goalForCellAt(position, uniforms->frameNumber);
+	const Goal myGoal = previous.goalForCellAt(position, uniforms->frameNumber);
 	
 	goals[uint(position.y) * uint(uniforms->width) + uint(position.x)] = myGoal;
 }

@@ -3,7 +3,7 @@
 
 using namespace metal;
 
-uint8_t densityOf(Pixel pixel) {
+uint8_t densityOf(const Pixel pixel) {
 	switch (pixel) {
 		case Pixel::air:
 			return 0;
