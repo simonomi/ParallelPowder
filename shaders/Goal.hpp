@@ -2,6 +2,7 @@
 #define Goal_hpp
 
 #include "Position.hpp"
+#include "Offset.hpp"
 
 #ifndef __METAL__
 #include <stdint.h>
@@ -10,9 +11,7 @@
 struct Goal {
 	union Data {
 		Pixel newPixel;
-		Position target; // could replace with an enum
-						 // _ideally_, we could even bitpack the kind/data together 🤔
-						 // if we're ALU-bound now though, is it still worth making Goals smaller?
+		Offset offset;
 	} data;
 	
 	uint8_t priority;
@@ -25,9 +24,11 @@ struct Goal {
 	);
 	
 	static Goal swapWith(
-		Position target,
+		Offset offset,
 		uint8_t priority
 	);
+	
+	Position targetWhenAt(Position position) const;
 	
 private:
 	Goal(

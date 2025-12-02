@@ -22,6 +22,7 @@
 		AB9C78B12E4E84CF008C90FD /* Goal.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB9C78B02E4E84CF008C90FD /* Goal.metal */; };
 		AB9C78B32E4E84D4008C90FD /* OutputBoard.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB9C78B22E4E84D4008C90FD /* OutputBoard.metal */; };
 		AB9E5CD12EDE9E5000DA9F03 /* InputBoard.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB9E5CD02EDE9E5000DA9F03 /* InputBoard.metal */; };
+		ABA6FEB22EE62AC700568137 /* Offset.metal in Sources */ = {isa = PBXBuildFile; fileRef = ABA6FEB12EE62AC700568137 /* Offset.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +51,8 @@
 		AB9C78B42E4E85AA008C90FD /* Goal.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Goal.hpp; sourceTree = "<group>"; };
 		AB9E5CCF2EDE9E1E00DA9F03 /* InputBoard.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = InputBoard.hpp; sourceTree = "<group>"; };
 		AB9E5CD02EDE9E5000DA9F03 /* InputBoard.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = InputBoard.metal; sourceTree = "<group>"; };
+		ABA6FEB02EE62A5600568137 /* Offset.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Offset.hpp; sourceTree = "<group>"; };
+		ABA6FEB12EE62AC700568137 /* Offset.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Offset.metal; sourceTree = "<group>"; };
 		ABB538452E4AC1520021B6AD /* SharedTypes.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SharedTypes.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -110,6 +113,8 @@
 			children = (
 				AB9C78AC2E4E806A008C90FD /* Position.hpp */,
 				AB9C78AA2E4E803D008C90FD /* Position.metal */,
+				ABA6FEB02EE62A5600568137 /* Offset.hpp */,
+				ABA6FEB12EE62AC700568137 /* Offset.metal */,
 				AB9C78B42E4E85AA008C90FD /* Goal.hpp */,
 				AB9C78B02E4E84CF008C90FD /* Goal.metal */,
 				AB9C78AD2E4E83D1008C90FD /* RNG.hpp */,
@@ -205,6 +210,7 @@
 				AB46BB272E4A963D00D391C3 /* Renderer.swift in Sources */,
 				AB9C78B12E4E84CF008C90FD /* Goal.metal in Sources */,
 				AB46BB252E4A8ECD00D391C3 /* makeGoals.metal in Sources */,
+				ABA6FEB22EE62AC700568137 /* Offset.metal in Sources */,
 				AB46BB2F2E4A9DB000D391C3 /* MetalMapView.swift in Sources */,
 				AB9C78B32E4E84D4008C90FD /* OutputBoard.metal in Sources */,
 				AB9C78AB2E4E803D008C90FD /* Position.metal in Sources */,

@@ -40,6 +40,7 @@ class Renderer: NSObject, MTKViewDelegate {
 		updatePixelsPipeline = Self.buildUpdatePixelsPipeline(device, library)
 		renderPipeline = Self.buildRenderPipeline(device, metalKitView)
 		
+		print("making uniforms", MemoryLayout<Uniforms>.size)
 		var initialUniforms = Uniforms(
 			width: UInt16(metalKitView.drawableSize.width),
 			height: UInt16(metalKitView.drawableSize.height),
@@ -95,6 +96,7 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		print("resized to \(width)x\(height)")
 		
+		print("making pixel buffers", width * height, MemoryLayout<Pixel>.stride)
 		boards = (0..<2).map { _ in
 			device.makeBuffer(
 				bytes: Self.allAir(width: width, height: height),
@@ -102,6 +104,7 @@ class Renderer: NSObject, MTKViewDelegate {
 			)!
 		}
 		
+		print("making goals buffer", width * height * MemoryLayout<Goal>.stride)
 		goalsBuffer = device.makeBuffer(
 			length: width * height * MemoryLayout<Goal>.stride
 		)!

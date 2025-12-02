@@ -50,10 +50,7 @@ Position InputBoard::whoGetsToSwapTo(
 			
 			const Goal goal = goals[int(candidate.y) * int(this->size.x) + int(candidate.x)];
 			
-			if (
-				(goal.kind == Goal::Kind::swap && goal.data.target == position) ||
-				(goal.kind == Goal::Kind::change && candidate == position)
-			) {
+			if (goal.targetWhenAt(candidate) == position) {
 				numberConsidered += 1;
 				
 				// each candidate has a (1/index) chance of winning,

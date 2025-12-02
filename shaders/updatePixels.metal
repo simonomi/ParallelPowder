@@ -36,7 +36,8 @@ kernel void updatePixels(
 			break;
 		}
 		case Goal::Kind::swap: {
-			const Goal targetsGoal = goals[myGoal.data.target.y * uniforms.width + myGoal.data.target.x];
+			const Position targetPosition = myGoal.targetWhenAt(position);
+			const Goal targetsGoal = goals[targetPosition.y * uniforms.width + targetPosition.x];
 			
 			// if our target is swapping, do nothing
 			if (targetsGoal.kind == Goal::Kind::swap) {
@@ -45,13 +46,13 @@ kernel void updatePixels(
 			}
 			
 			const Position whoSwaps = previous.whoGetsToSwapTo(
-				myGoal.data.target,
+				targetPosition,
 				goals,
 				uniforms.frameNumber
 			);
 			
 			if (whoSwaps == position) { // i get to swap
-				current.setPixelAt(position, previous.uncheckedPixelAt(myGoal.data.target));
+				current.setPixelAt(position, previous.uncheckedPixelAt(targetPosition));
 			} else { // someone else swaps
 				current.setPixelAt(position, previous.uncheckedPixelAt(position));
 			}

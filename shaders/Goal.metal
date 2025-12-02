@@ -17,14 +17,26 @@ Goal Goal::changeTo(
 }
 
 Goal Goal::swapWith(
-	const Position target,
+	const Offset offset,
 	const uint8_t priority
 ) {
 	return Goal(
 		Kind::swap,
-		Data { .target = target },
+		Data { .offset = offset },
 		priority
 	);
+}
+
+Position Goal::targetWhenAt(Position position) const {
+	switch (kind) {
+		case Kind::change:
+			return position;
+		case Kind::swap:
+			return Position(
+				position.x + xOffsetFor(this->data.offset),
+				position.y + yOffsetFor(this->data.offset)
+			);
+	}
 }
 
 Goal::Goal(
