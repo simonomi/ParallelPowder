@@ -8,9 +8,9 @@ OutputBoard::OutputBoard(
 	device Pixel* inputPixels,
 	constant const Uniforms* uniforms
 ) : pixels(inputPixels) {
-	size = int2(uniforms->width, uniforms->height);
+	size = ushort2(uniforms->width, uniforms->height);
 }
 
 void OutputBoard::setPixelAt(Position position, Pixel newValue) {
-	pixels[position.y * size.x + position.x] = newValue;
+	pixels[uint(position.y) * uint(size.x) + uint(position.x)] = newValue;
 }

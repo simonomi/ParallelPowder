@@ -1,12 +1,11 @@
 #ifndef Position_hpp
 #define Position_hpp
 
-// TODO: use u16s instead of ints? or i16s?
 struct Position {
-	int x;
-	int y;
+	int16_t x;
+	int16_t y;
 	
-	Position(int inputX, int inputY);
+	Position(int16_t inputX, int16_t inputY);
 	
 #ifdef __METAL__
 	Position(uint2 inputPosition);

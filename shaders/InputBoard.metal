@@ -8,7 +8,7 @@ InputBoard::InputBoard(
 	constant const Pixel* inputPixels,
 	constant const Uniforms* uniforms
 ) : pixels(inputPixels) {
-	size = int2(uniforms->width, uniforms->height);
+	size = ushort2(uniforms->width, uniforms->height);
 }
 
 bool InputBoard::containsPosition(Position position) {
@@ -16,12 +16,9 @@ bool InputBoard::containsPosition(Position position) {
 	       position.y >= 0 && position.y < size.y;
 }
 
-// TODO: is there any way to remove this bounds check?
-// i think this is called in a lot of places, so itd probably be worth it?
-// - some kind of special case for border pixels??
 Pixel InputBoard::pixelAt(Position position) {
 	if (containsPosition(position)) {
-		return pixels[position.y * size.x + position.x];
+		return pixels[uint(position.y) * uint(size.x) + uint(position.x)];
 	} else {
 		return Pixel::outOfBounds;
 	}
@@ -33,9 +30,9 @@ Pixel InputBoard::pixelAt(Position position) {
 Position InputBoard::whoGetsToSwapTo(
 	Position position,
 	constant const Goal* goals,
-	unsigned int frameNumber
+	uint16_t frameNumber
 ) {
-	int numberConsidered = -1;
+	uint8_t numberConsidered = -1;
 	Position currentWinner { -1, -1 };
 	RNG rng { position, frameNumber };
 	

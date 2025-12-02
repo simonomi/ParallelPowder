@@ -6,7 +6,7 @@
 
 struct OutputBoard {
 	device Pixel* pixels;
-	int2 size; // TODO: make u16s?
+	ushort2 size;
 	
 	OutputBoard(
 		device Pixel* inputPixels,

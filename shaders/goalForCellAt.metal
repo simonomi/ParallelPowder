@@ -147,7 +147,7 @@ constant GoalAndCriteria fireGoals[] = {
 	}
 };
 
-Goal InputBoard::goalForCellAt(Position position, unsigned int frameNumber) {
+Goal InputBoard::goalForCellAt(Position position, uint16_t frameNumber) {
 	constant GoalAndCriteria* goals;
 	uint8_t goalCount;
 	

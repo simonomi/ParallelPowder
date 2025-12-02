@@ -6,7 +6,7 @@
 
 struct InputBoard {
 	constant const Pixel* pixels;
-	int2 size; // TODO: make u16s?
+	ushort2 size;
 	
 	InputBoard(
 		constant const Pixel* inputPixels,
@@ -17,13 +17,13 @@ struct InputBoard {
 	
 	Pixel pixelAt(Position position);
 	
-	Goal goalForCellAt(Position position, unsigned int frameNumber);
+	Goal goalForCellAt(Position position, uint16_t frameNumber);
 	
 	/// should only be called if `position` is the target of at least one swap
 	Position whoGetsToSwapTo(
 		Position position,
 		constant const Goal* goals,
-		unsigned int frameNumber
+		uint16_t frameNumber
 	);
 };
 

@@ -3,7 +3,7 @@
 
 using namespace metal;
 
-Position::Position(int inputX, int inputY) :
+Position::Position(int16_t inputX, int16_t inputY) :
 	x(inputX),
 	y(inputY)
 {}

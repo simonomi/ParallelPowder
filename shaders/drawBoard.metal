@@ -29,7 +29,10 @@ fragment float4 drawBoard(
 	constant const Uniforms* uniforms [[buffer(0)]],
 	constant const Pixel* currentTick [[buffer(1)]]
 ) {
-	Position position { int(in.uv.x * uniforms->width), int(in.uv.y * uniforms->height) };
+	Position position {
+		int16_t(in.uv.x * uniforms->width),
+		int16_t(in.uv.y * uniforms->height)
+	};
 	
 	InputBoard current { currentTick, uniforms };
 	

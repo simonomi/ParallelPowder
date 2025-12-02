@@ -44,8 +44,8 @@ class Renderer: NSObject, MTKViewDelegate {
 		renderPipeline = Self.buildRenderPipeline(device, metalKitView)
 		
 		var initialUniforms = Uniforms(
-			width: UInt32(metalKitView.drawableSize.width),
-			height: UInt32(metalKitView.drawableSize.height),
+			width: UInt16(metalKitView.drawableSize.width),
+			height: UInt16(metalKitView.drawableSize.height),
 			frameNumber: 1,
 		)
 		uniformsBuffer = device.makeBuffer(
@@ -138,8 +138,8 @@ class Renderer: NSObject, MTKViewDelegate {
 	func updateUniforms(to size: CGSize) {
 		uniformsBuffer.contents()
 			.withMemoryRebound(to: Uniforms.self, capacity: 1) { uniforms in
-				uniforms.pointee.width = UInt32(size.width)
-				uniforms.pointee.height = UInt32(size.height)
+				uniforms.pointee.width = UInt16(size.width)
+				uniforms.pointee.height = UInt16(size.height)
 				
 				uniforms.pointee.frameNumber = 1
 			}
@@ -161,7 +161,7 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		uniformsBuffer.contents()
 			.withMemoryRebound(to: Uniforms.self, capacity: 1) { uniforms in
-				uniforms.pointee.frameNumber += 1
+				uniforms.pointee.frameNumber &+= 1
 			}
 		
 		let commandBuffer = commandQueue.makeCommandBuffer()!

@@ -13,7 +13,7 @@ float rand(int x, int y, int z) {
 
 RNG::RNG(
 	Position inputPosition,
-	unsigned int inputFrameNumber
+	uint16_t inputFrameNumber
 ) :
 	position(inputPosition),
 	frameNumber(inputFrameNumber),
@@ -26,7 +26,7 @@ bool RNG::oneChanceIn(unsigned int denominator) {
 	
 	float randomNumber = rand(
 		42577 * position.x + 782941 * position.y,
-		frameNumber,
+		int(frameNumber),
 		seed
 	);
 	

@@ -3,14 +3,18 @@
 
 #include "Position.hpp"
 
+#ifndef __METAL__
+#include <stdint.h>
+#endif
+
 struct RNG {
 	Position position;
-	unsigned int frameNumber;
+	uint16_t frameNumber;
 	int seed;
 	
 	RNG(
 		Position inputPosition,
-		unsigned int inputFrameNumber
+		uint16_t inputFrameNumber
 	);
 	
 	/// returns true with a 1/denominator chance
