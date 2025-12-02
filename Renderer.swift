@@ -30,9 +30,6 @@ class Renderer: NSObject, MTKViewDelegate {
 	
 	var currentSize: CGSize
 	
-	var threadGridSize: MTLSize
-	var threadsPerThreadgroup: MTLSize
-	
 	init(metalKitView: MTKView) {
 		device = metalKitView.device!
 		commandQueue = device.makeCommandQueue()!
@@ -58,8 +55,6 @@ class Renderer: NSObject, MTKViewDelegate {
 		goalsBuffer = device.makeBuffer(length: 1)!
 		
 		currentSize = metalKitView.drawableSize
-		
-		(threadGridSize, threadsPerThreadgroup) = Self.threadSizes(for: currentSize)
 		
 		super.init()
 	}
@@ -94,20 +89,8 @@ class Renderer: NSObject, MTKViewDelegate {
 		return try! device.makeRenderPipelineState(descriptor: pipelineDescriptor)
 	}
 	
-	static func threadSizes(for viewSize: CGSize) -> (MTLSize, MTLSize) {
-		let threadsPerThreadgroup = MTLSize(width: 8, height: 8, depth: 1)
-		let threadGridSize = MTLSize(
-			width: Int(viewSize.width) / threadsPerThreadgroup.width + 1,
-			height: Int(viewSize.height) / threadsPerThreadgroup.height + 1,
-			depth: 1
-		)
-		return (threadGridSize, threadsPerThreadgroup)
-	}
-	
 	func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
 		currentSize = size
-		(threadGridSize, threadsPerThreadgroup) = Self.threadSizes(for: currentSize)
-		
 		let (width, height) = (Int(size.width), Int(size.height))
 		
 		print("resized to \(width)x\(height)")
@@ -186,7 +169,20 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		computeEncoder.setComputePipelineState(makeGoalsPipeline)
 		
-		computeEncoder.dispatchThreadgroups(threadGridSize, threadsPerThreadgroup: threadsPerThreadgroup)
+		let threadsPerGrid = MTLSize(
+			width: Int(currentSize.width),
+			height: Int(currentSize.height),
+			depth: 1
+		)
+		
+		let w = makeGoalsPipeline.threadExecutionWidth
+		let h = makeGoalsPipeline.maxTotalThreadsPerThreadgroup / w
+		let threadsPerThreadgroup = MTLSize(width: w, height: h, depth: 1)
+		
+		computeEncoder.dispatchThreads(
+			threadsPerGrid,
+			threadsPerThreadgroup: threadsPerThreadgroup
+		)
 		
 		computeEncoder.endEncoding()
 	}
@@ -203,7 +199,20 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		computeEncoder.setComputePipelineState(updatePixelsPipeline)
 		
-		computeEncoder.dispatchThreadgroups(threadGridSize, threadsPerThreadgroup: threadsPerThreadgroup)
+		let threadsPerGrid = MTLSize(
+			width: Int(currentSize.width),
+			height: Int(currentSize.height),
+			depth: 1
+		)
+		
+		let w = updatePixelsPipeline.threadExecutionWidth
+		let h = updatePixelsPipeline.maxTotalThreadsPerThreadgroup / w
+		let threadsPerThreadgroup = MTLSize(width: w, height: h, depth: 1)
+		
+		computeEncoder.dispatchThreads(
+			threadsPerGrid,
+			threadsPerThreadgroup: threadsPerThreadgroup
+		)
 		
 		computeEncoder.endEncoding()
 	}

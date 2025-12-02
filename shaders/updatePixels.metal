@@ -12,10 +12,6 @@ kernel void updatePixels(
 	device Pixel* currentTick [[buffer(2)]],
 	const constant Goal* goals [[buffer(3)]]
 ) {
-	if (tid.y >= uniforms.height || tid.x >= uniforms.width) {
-		return;
-	}
-	
 	const Position position { tid };
 	
 	const InputBoard previous { previousTick, uniforms };

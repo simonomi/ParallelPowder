@@ -10,10 +10,6 @@ kernel void makeGoals(
 	const constant Pixel* previousTick [[buffer(1)]],
 	device Goal* goals [[buffer(2)]]
 ) {
-	if (tid.y >= uniforms.height || tid.x >= uniforms.width) {
-		return;
-	}
-	
 	const Position position { tid };
 	
 	const InputBoard previous { previousTick, uniforms };
