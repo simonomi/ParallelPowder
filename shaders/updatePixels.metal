@@ -21,7 +21,7 @@ kernel void updatePixels(
 	InputBoard previous { previousTick, uniforms };
 	OutputBoard current { currentTick, uniforms };
 	
-	Goal myGoal = goals[position.y * uniforms->width + position.x];
+	Goal myGoal = goals[uint(position.y) * uint(uniforms->width) + uint(position.x)];
 	
 	switch (myGoal.kind) {
 		case Goal::Kind::change: {
@@ -34,7 +34,7 @@ kernel void updatePixels(
 			if (whoSwaps == position) { // i get to change
 				current.setPixelAt(position, myGoal.data.newPixel);
 			} else { // someone swaps with me
-				current.setPixelAt(position, previous.pixelAt(whoSwaps));
+				current.setPixelAt(position, previous.uncheckedPixelAt(whoSwaps));
 			}
 			
 			break;
@@ -44,7 +44,7 @@ kernel void updatePixels(
 			
 			// if our target is swapping, do nothing
 			if (targetsGoal.kind == Goal::Kind::swap) {
-				current.setPixelAt(position, previous.pixelAt(position));
+				current.setPixelAt(position, previous.uncheckedPixelAt(position));
 				break;
 			}
 			
@@ -55,9 +55,9 @@ kernel void updatePixels(
 			);
 			
 			if (whoSwaps == position) { // i get to swap
-				current.setPixelAt(position, previous.pixelAt(myGoal.data.target));
+				current.setPixelAt(position, previous.uncheckedPixelAt(myGoal.data.target));
 			} else { // someone else swaps
-				current.setPixelAt(position, previous.pixelAt(position));
+				current.setPixelAt(position, previous.uncheckedPixelAt(position));
 			}
 			
 			break;

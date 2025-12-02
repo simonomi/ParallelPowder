@@ -151,7 +151,7 @@ Goal InputBoard::goalForCellAt(Position position, uint16_t frameNumber) {
 	constant GoalAndCriteria* goals;
 	uint8_t goalCount;
 	
-	switch (pixelAt(position)) {
+	switch (uncheckedPixelAt(position)) {
 		case Pixel::air:
 			goals = airGoals;
 			goalCount = sizeof(airGoals) / sizeof(*airGoals);
@@ -182,7 +182,7 @@ Goal InputBoard::goalForCellAt(Position position, uint16_t frameNumber) {
 	RNG goalChoiceRNG { position, frameNumber };
 	RNG criteriaRNG { position, frameNumber };
 	
-	Goal currentGoal = Goal::changeTo(pixelAt(position), 0);
+	Goal currentGoal = Goal::changeTo(uncheckedPixelAt(position), 0);
 	uint8_t numberConsidered = 0;
 	
 	for (uint8_t i = 0; i < goalCount; i += 1) {

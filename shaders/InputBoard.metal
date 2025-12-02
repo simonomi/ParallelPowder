@@ -24,6 +24,10 @@ Pixel InputBoard::pixelAt(Position position) {
 	}
 }
 
+Pixel InputBoard::uncheckedPixelAt(Position position) {
+	return pixels[uint(position.y) * uint(size.x) + uint(position.x)];
+}
+
 /// randomly pick one of the swaps/changes targeting a given pixel
 ///
 /// should only be called if `position` is the target of at least one swap (or change)
@@ -39,7 +43,12 @@ Position InputBoard::whoGetsToSwapTo(
 	for (int8_t y : {-1, 0, 1}) {
 		for (int8_t x : {-1, 0, 1}) {
 			Position candidate = position.offsetBy(x, y);
-			Goal goal = goals[candidate.y * this->size.x + candidate.x];
+			
+			if (!containsPosition(candidate)) {
+				continue;
+			}
+			
+			Goal goal = goals[uint(candidate.y) * uint(this->size.x) + uint(candidate.x)];
 			
 			if (
 				(goal.kind == Goal::Kind::swap && goal.data.target == position) ||

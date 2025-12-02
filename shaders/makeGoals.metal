@@ -20,5 +20,5 @@ kernel void makeGoals(
 	
 	Goal myGoal = previous.goalForCellAt(position, uniforms->frameNumber);
 	
-	goals[position.y * uniforms->width + position.x] = myGoal;
+	goals[uint(position.y) * uint(uniforms->width) + uint(position.x)] = myGoal;
 }

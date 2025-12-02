@@ -17,6 +17,8 @@ struct InputBoard {
 	
 	Pixel pixelAt(Position position);
 	
+	Pixel uncheckedPixelAt(Position position);
+	
 	Goal goalForCellAt(Position position, uint16_t frameNumber);
 	
 	/// should only be called if `position` is the target of at least one swap
