@@ -1,16 +1,16 @@
 #include <metal_stdlib>
-#include "Board.hpp"
+#include "InputBoard.hpp"
 #include "RNG.hpp"
 
 using namespace metal;
 
 struct GoalAndCriteria {
 	Goal (*goal)(Position position);
-	bool (*criteria)(Board board, Position position, RNG rng);
+	bool (*criteria)(InputBoard board, Position position, RNG rng);
 	
 	GoalAndCriteria(
 		Goal (*inputGoal)(Position position),
-		bool (*inputCriteria)(Board board, Position position, RNG rng)
+		bool (*inputCriteria)(InputBoard board, Position position, RNG rng)
 	) :
 		goal(inputGoal),
 		criteria(inputCriteria)
@@ -33,7 +33,7 @@ constant GoalAndCriteria airGoals[] = {
 		[](Position position) {
 			return Goal::changeTo(Pixel::tree, 1);
 		},
-		[](Board board, Position position, RNG rng) {
+		[](InputBoard board, Position position, RNG rng) {
 			return rng.oneChanceIn(treeGrowChance);
 		}
 	}
@@ -44,7 +44,7 @@ constant GoalAndCriteria sandGoals[] = {
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(0, -1), 1);
 		},
-		[](Board board, Position position, RNG rng) {
+		[](InputBoard board, Position position, RNG rng) {
 			return densityOf(board.pixelAt(position.offsetBy(0, -1))) < densityOf(Pixel::sand);
 		}
 	},
@@ -52,7 +52,7 @@ constant GoalAndCriteria sandGoals[] = {
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(-1, -1), 1);
 		},
-		[](Board board, Position position, RNG rng) {
+		[](InputBoard board, Position position, RNG rng) {
 			return densityOf(board.pixelAt(position.offsetBy(-1, -1))) < densityOf(Pixel::sand);
 		}
 	},
@@ -60,7 +60,7 @@ constant GoalAndCriteria sandGoals[] = {
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(1, -1), 1);
 		},
-		[](Board board, Position position, RNG rng) {
+		[](InputBoard board, Position position, RNG rng) {
 			return densityOf(board.pixelAt(position.offsetBy(1, -1))) < densityOf(Pixel::sand);
 		}
 	}
@@ -71,7 +71,7 @@ constant GoalAndCriteria waterGoals[] = {
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(0, -1), 2);
 		},
-		[](Board board, Position position, RNG rng) {
+		[](InputBoard board, Position position, RNG rng) {
 			return densityOf(board.pixelAt(position.offsetBy(0, -1))) < densityOf(Pixel::water);
 		}
 	},
@@ -79,7 +79,7 @@ constant GoalAndCriteria waterGoals[] = {
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(-1, -1), 2);
 		},
-		[](Board board, Position position, RNG rng) {
+		[](InputBoard board, Position position, RNG rng) {
 			return densityOf(board.pixelAt(position.offsetBy(-1, -1))) < densityOf(Pixel::water);
 		}
 	},
@@ -87,7 +87,7 @@ constant GoalAndCriteria waterGoals[] = {
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(1, -1), 2);
 		},
-		[](Board board, Position position, RNG rng) {
+		[](InputBoard board, Position position, RNG rng) {
 			return densityOf(board.pixelAt(position.offsetBy(1, -1))) < densityOf(Pixel::water);
 		}
 	},
@@ -95,7 +95,7 @@ constant GoalAndCriteria waterGoals[] = {
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(-1, 0), 1);
 		},
-		[](Board board, Position position, RNG rng) {
+		[](InputBoard board, Position position, RNG rng) {
 			return densityOf(board.pixelAt(position.offsetBy(-1, 0))) < densityOf(Pixel::water);
 		}
 	},
@@ -103,7 +103,7 @@ constant GoalAndCriteria waterGoals[] = {
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(1, 0), 1);
 		},
-		[](Board board, Position position, RNG rng) {
+		[](InputBoard board, Position position, RNG rng) {
 			return densityOf(board.pixelAt(position.offsetBy(1, 0))) < densityOf(Pixel::water);
 		}
 	}
@@ -114,7 +114,7 @@ constant GoalAndCriteria treeGoals[] = {
 		[](Position position) {
 			return Goal::changeTo(Pixel::fire, 1);
 		},
-		[](Board board, Position position, RNG rng) {
+		[](InputBoard board, Position position, RNG rng) {
 			// TODO: make i8?
 			for (int xOffset : {-1, 0, 1}) {
 				for (int yOffset : {-1, 0, 1}) {
@@ -131,7 +131,7 @@ constant GoalAndCriteria treeGoals[] = {
 		[](Position position) {
 			return Goal::changeTo(Pixel::fire, 1);
 		},
-		[](Board board, Position position, RNG rng) {
+		[](InputBoard board, Position position, RNG rng) {
 			return rng.oneChanceIn(treeBurnChance);
 		}
 	}
@@ -142,13 +142,13 @@ constant GoalAndCriteria fireGoals[] = {
 		[](Position position) {
 			return Goal::changeTo(Pixel::air, 1);
 		},
-		[](Board board, Position position, RNG rng) {
+		[](InputBoard board, Position position, RNG rng) {
 			return true;
 		}
 	}
 };
 
-Goal Board::goalForCellAt(Position position, unsigned int frameNumber) {
+Goal InputBoard::goalForCellAt(Position position, unsigned int frameNumber) {
 	constant GoalAndCriteria* goals;
 	// TODO: make u8?
 	unsigned int goalCount;

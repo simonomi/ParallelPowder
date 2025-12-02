@@ -1,13 +1,14 @@
 #include <metal_stdlib>
 #include "../SharedTypes.hpp"
-#include "Board.hpp"
+#include "InputBoard.hpp"
+#include "OutputBoard.hpp"
 
 using namespace metal;
 
 kernel void updatePixels(
 	uint2 tid [[thread_position_in_grid]],
 	constant const Uniforms* uniforms [[buffer(0)]],
-	device Pixel* previousTick [[buffer(1)]], // TODO: make constant
+	constant const Pixel* previousTick [[buffer(1)]],
 	device Pixel* currentTick [[buffer(2)]],
 	constant const Goal* goals [[buffer(3)]]
 ) {
@@ -17,8 +18,8 @@ kernel void updatePixels(
 	
 	Position position { tid };
 	
-	Board previous { previousTick, uniforms };
-	Board current { currentTick, uniforms };
+	InputBoard previous { previousTick, uniforms };
+	OutputBoard current { currentTick, uniforms };
 	
 	Goal myGoal = goals[position.y * uniforms->width + position.x];
 	

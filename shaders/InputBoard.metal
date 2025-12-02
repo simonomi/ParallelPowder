@@ -1,17 +1,17 @@
 #include <metal_stdlib>
-#include "Board.hpp"
+#include "InputBoard.hpp"
 #include "RNG.hpp"
 
 using namespace metal;
 
-Board::Board(
-	device Pixel* inputPixels,
+InputBoard::InputBoard(
+	constant const Pixel* inputPixels,
 	constant const Uniforms* uniforms
 ) : pixels(inputPixels) {
 	size = int2(uniforms->width, uniforms->height);
 }
 
-bool Board::containsPosition(Position position) {
+bool InputBoard::containsPosition(Position position) {
 	return position.x >= 0 && position.x < size.x &&
 	       position.y >= 0 && position.y < size.y;
 }
@@ -19,7 +19,7 @@ bool Board::containsPosition(Position position) {
 // TODO: is there any way to remove this bounds check?
 // i think this is called in a lot of places, so itd probably be worth it?
 // - some kind of special case for border pixels??
-Pixel Board::pixelAt(Position position) {
+Pixel InputBoard::pixelAt(Position position) {
 	if (containsPosition(position)) {
 		return pixels[position.y * size.x + position.x];
 	} else {
@@ -27,14 +27,10 @@ Pixel Board::pixelAt(Position position) {
 	}
 }
 
-void Board::setPixelAt(Position position, Pixel newValue) {
-	pixels[position.y * size.x + position.x] = newValue;
-}
-
 /// randomly pick one of the swaps/changes targeting a given pixel
 ///
 /// should only be called if `position` is the target of at least one swap (or change)
-Position Board::whoGetsToSwapTo(
+Position InputBoard::whoGetsToSwapTo(
 	Position position,
 	constant const Goal* goals,
 	unsigned int frameNumber

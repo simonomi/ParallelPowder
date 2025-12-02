@@ -1,13 +1,13 @@
 #include <metal_stdlib>
 #include "../SharedTypes.hpp"
-#include "Board.hpp"
+#include "InputBoard.hpp"
 
 using namespace metal;
 
 kernel void makeGoals(
 	uint2 tid [[thread_position_in_grid]],
 	constant const Uniforms* uniforms [[buffer(0)]],
-	device Pixel* previousTick [[buffer(1)]], // TODO: make constant
+	constant const Pixel* previousTick [[buffer(1)]],
 	device Goal* goals [[buffer(2)]]
 ) {
 	if (tid.y >= uniforms->height || tid.x >= uniforms->width) {
@@ -16,7 +16,7 @@ kernel void makeGoals(
 	
 	Position position { tid };
 	
-	Board previous { previousTick, uniforms };
+	InputBoard previous { previousTick, uniforms };
 	
 	Goal myGoal = previous.goalForCellAt(position, uniforms->frameNumber);
 	

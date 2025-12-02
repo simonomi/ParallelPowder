@@ -1,23 +1,21 @@
-#ifndef Board_hpp
-#define Board_hpp
+#ifndef ConstantBoard_hpp
+#define ConstantBoard_hpp
 
 #include "../SharedTypes.hpp"
 #include "Goal.hpp"
 
-struct Board {
-	device Pixel* pixels;
+struct InputBoard {
+	constant const Pixel* pixels;
 	int2 size; // TODO: make u16s?
 	
-	Board(
-		device Pixel* inputPixels,
+	InputBoard(
+		constant const Pixel* inputPixels,
 		constant const Uniforms* uniforms
 	);
 	
 	bool containsPosition(Position position);
 	
 	Pixel pixelAt(Position position);
-	
-	void setPixelAt(Position position, Pixel newValue);
 	
 	Goal goalForCellAt(Position position, unsigned int frameNumber);
 	
@@ -29,4 +27,4 @@ struct Board {
 	);
 };
 
-#endif /* Board_hpp */
+#endif /* ConstantBoard_hpp */

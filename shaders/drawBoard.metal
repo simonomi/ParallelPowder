@@ -1,7 +1,7 @@
 #include <metal_stdlib>
 #include "../SharedTypes.hpp"
 #include "VertexShaderResult.hpp"
-#include "Board.hpp"
+#include "InputBoard.hpp"
 
 using namespace metal;
 
@@ -27,11 +27,11 @@ float4 colorFor(Pixel pixel) {
 fragment float4 drawBoard(
 	VertexShaderResult in [[stage_in]],
 	constant const Uniforms* uniforms [[buffer(0)]],
-	device Pixel* currentTick [[buffer(1)]]
+	constant const Pixel* currentTick [[buffer(1)]]
 ) {
 	Position position { int(in.uv.x * uniforms->width), int(in.uv.y * uniforms->height) };
 	
-	Board current { currentTick, uniforms };
+	InputBoard current { currentTick, uniforms };
 	
 	return colorFor(current.pixelAt(position));
 }
