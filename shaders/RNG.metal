@@ -11,7 +11,6 @@ float rand(int x, int y, int z) {
 	return ((1.0 - ((seed * (seed * seed * 15731 + 789221) + 1376312589) & 2147483647) / 1073741824.0f) + 1.0f) / 2.0f;
 }
 
-// TODO: include more seeds to prevent repetition
 RNG::RNG(
 	Position inputPosition,
 	unsigned int inputFrameNumber
@@ -22,7 +21,7 @@ RNG::RNG(
 {}
 
 /// returns true with a 1/denominator chance
-bool RNG::oneChanceIn(int denominator) {
+bool RNG::oneChanceIn(unsigned int denominator) {
 	if (denominator == 1) { return true; }
 	
 	float randomNumber = rand(

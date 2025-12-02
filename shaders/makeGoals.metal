@@ -7,7 +7,7 @@ using namespace metal;
 kernel void makeGoals(
 	uint2 tid [[thread_position_in_grid]],
 	constant const Uniforms* uniforms [[buffer(0)]],
-	device Pixel* previousTick [[buffer(1)]],
+	device Pixel* previousTick [[buffer(1)]], // TODO: make constant
 	device Goal* goals [[buffer(2)]]
 ) {
 	if (tid.y >= uniforms->height || tid.x >= uniforms->width) {

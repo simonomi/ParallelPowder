@@ -7,7 +7,7 @@ using namespace metal;
 kernel void updatePixels(
 	uint2 tid [[thread_position_in_grid]],
 	constant const Uniforms* uniforms [[buffer(0)]],
-	device Pixel* previousTick [[buffer(1)]],
+	device Pixel* previousTick [[buffer(1)]], // TODO: make constant
 	device Pixel* currentTick [[buffer(2)]],
 	constant const Goal* goals [[buffer(3)]]
 ) {
@@ -31,9 +31,9 @@ kernel void updatePixels(
 			);
 			
 			if (whoSwaps == position) { // i get to change
-				current.setPixelTo(position, myGoal.data.newPixel);
+				current.setPixelAt(position, myGoal.data.newPixel);
 			} else { // someone swaps with me
-				current.setPixelTo(position, previous.pixelAt(whoSwaps));
+				current.setPixelAt(position, previous.pixelAt(whoSwaps));
 			}
 			
 			break;
@@ -41,8 +41,9 @@ kernel void updatePixels(
 		case Goal::Kind::swap: {
 			Goal targetsGoal = goals[myGoal.data.target.y * uniforms->width + myGoal.data.target.x];
 			
+			// if our target is swapping, do nothing
 			if (targetsGoal.kind == Goal::Kind::swap) {
-				current.setPixelTo(position, previous.pixelAt(position));
+				current.setPixelAt(position, previous.pixelAt(position));
 				break;
 			}
 			
@@ -53,9 +54,9 @@ kernel void updatePixels(
 			);
 			
 			if (whoSwaps == position) { // i get to swap
-				current.setPixelTo(position, previous.pixelAt(myGoal.data.target));
+				current.setPixelAt(position, previous.pixelAt(myGoal.data.target));
 			} else { // someone else swaps
-				current.setPixelTo(position, previous.pixelAt(position));
+				current.setPixelAt(position, previous.pixelAt(position));
 			}
 			
 			break;

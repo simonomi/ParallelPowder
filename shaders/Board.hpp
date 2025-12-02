@@ -6,7 +6,7 @@
 
 struct Board {
 	device Pixel* pixels;
-	int2 size;
+	int2 size; // TODO: make u16s?
 	
 	Board(
 		device Pixel* inputPixels,
@@ -17,7 +17,7 @@ struct Board {
 	
 	Pixel pixelAt(Position position);
 	
-	void setPixelTo(Position position, Pixel newValue);
+	void setPixelAt(Position position, Pixel newValue);
 	
 	Goal goalForCellAt(Position position, unsigned int frameNumber);
 	

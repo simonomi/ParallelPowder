@@ -4,6 +4,7 @@
 #include "Position.hpp"
 
 struct Goal {
+	// TODO: use u8 instead?
 	int priority;
 	
 	union Data {

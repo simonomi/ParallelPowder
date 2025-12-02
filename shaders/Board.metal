@@ -16,6 +16,9 @@ bool Board::containsPosition(Position position) {
 	       position.y >= 0 && position.y < size.y;
 }
 
+// TODO: is there any way to remove this bounds check?
+// i think this is called in a lot of places, so itd probably be worth it?
+// - some kind of special case for border pixels??
 Pixel Board::pixelAt(Position position) {
 	if (containsPosition(position)) {
 		return pixels[position.y * size.x + position.x];
@@ -24,21 +27,23 @@ Pixel Board::pixelAt(Position position) {
 	}
 }
 
-void Board::setPixelTo(Position position, Pixel newValue) {
+void Board::setPixelAt(Position position, Pixel newValue) {
 	pixels[position.y * size.x + position.x] = newValue;
 }
 
-/// should only be called if `position` is the target of at least one swap
+/// randomly pick one of the swaps/changes targeting a given pixel
+///
+/// should only be called if `position` is the target of at least one swap (or change)
 Position Board::whoGetsToSwapTo(
 	Position position,
 	constant const Goal* goals,
 	unsigned int frameNumber
 ) {
-	int highestPriority = -1;
 	int numberConsidered = -1;
 	Position currentWinner { -1, -1 };
 	RNG rng { position, frameNumber };
 	
+	// TODO: make these i8s?
 	for (int y : {-1, 0, 1}) {
 		for (int x : {-1, 0, 1}) {
 			Position candidate = position.offsetBy(x, y);
@@ -48,18 +53,12 @@ Position Board::whoGetsToSwapTo(
 				(goal.kind == Goal::Kind::swap && goal.data.target == position) ||
 				(goal.kind == Goal::Kind::change && candidate == position)
 			) {
-				if (goal.priority > highestPriority) {
-					highestPriority = goal.priority;
-					numberConsidered = 1;
+				numberConsidered += 1;
+				
+				// each candidate has a (1/index) chance of winning,
+				// which is equivalent to randomly selecting one
+				if (rng.oneChanceIn(numberConsidered)) {
 					currentWinner = candidate;
-				} else if (goal.priority == highestPriority) {
-					numberConsidered += 1;
-					
-					// each candidate has a (1/index) chance of winning,
-					// which is equivalent to randomly selecting one
-					if (rng.oneChanceIn(numberConsidered)) {
-						currentWinner = candidate;
-					}
 				}
 			}
 		}

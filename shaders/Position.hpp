@@ -1,6 +1,7 @@
 #ifndef Position_hpp
 #define Position_hpp
 
+// TODO: use u16s instead of ints? or i16s?
 struct Position {
 	int x;
 	int y;

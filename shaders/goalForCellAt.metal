@@ -17,8 +17,16 @@ struct GoalAndCriteria {
 	{};
 };
 
-constant int treeGrowChance = /* 1 in */ 500;
-constant int treeBurnChance = /* 1 in */ 100000;
+constant unsigned int treeGrowChance = /* 1 in */ 500;
+constant unsigned int treeBurnChance = /* 1 in */ 100000;
+
+// goals must be sorted by priority high->low
+//
+// priority is used to decide between a pixel's valid goals.
+// of the highest-priority valid goals, one is chosen at random.
+//
+// the default goal of a cell is to change to itself. this means
+// that a cell with no goals _can_ be swapped with
 
 constant GoalAndCriteria airGoals[] = {
 	GoalAndCriteria { // grow tree randomly
@@ -31,9 +39,8 @@ constant GoalAndCriteria airGoals[] = {
 	}
 };
 
-// goals must be sorted by priority high->low
 constant GoalAndCriteria sandGoals[] = {
-	GoalAndCriteria {
+	GoalAndCriteria { // fall down
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(0, -1), 1);
 		},
@@ -41,7 +48,7 @@ constant GoalAndCriteria sandGoals[] = {
 			return densityOf(board.pixelAt(position.offsetBy(0, -1))) < densityOf(Pixel::sand);
 		}
 	},
-	GoalAndCriteria {
+	GoalAndCriteria { // fall diagonally left
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(-1, -1), 1);
 		},
@@ -49,7 +56,7 @@ constant GoalAndCriteria sandGoals[] = {
 			return densityOf(board.pixelAt(position.offsetBy(-1, -1))) < densityOf(Pixel::sand);
 		}
 	},
-	GoalAndCriteria {
+	GoalAndCriteria { // fall diagonally right
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(1, -1), 1);
 		},
@@ -60,7 +67,7 @@ constant GoalAndCriteria sandGoals[] = {
 };
 
 constant GoalAndCriteria waterGoals[] = {
-	GoalAndCriteria {
+	GoalAndCriteria { // fall down
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(0, -1), 2);
 		},
@@ -68,7 +75,7 @@ constant GoalAndCriteria waterGoals[] = {
 			return densityOf(board.pixelAt(position.offsetBy(0, -1))) < densityOf(Pixel::water);
 		}
 	},
-	GoalAndCriteria {
+	GoalAndCriteria { // fall diagonally left
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(-1, -1), 2);
 		},
@@ -76,7 +83,7 @@ constant GoalAndCriteria waterGoals[] = {
 			return densityOf(board.pixelAt(position.offsetBy(-1, -1))) < densityOf(Pixel::water);
 		}
 	},
-	GoalAndCriteria {
+	GoalAndCriteria { // fall diagonally right
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(1, -1), 2);
 		},
@@ -84,7 +91,7 @@ constant GoalAndCriteria waterGoals[] = {
 			return densityOf(board.pixelAt(position.offsetBy(1, -1))) < densityOf(Pixel::water);
 		}
 	},
-	GoalAndCriteria {
+	GoalAndCriteria { // move horizontally left
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(-1, 0), 1);
 		},
@@ -92,7 +99,7 @@ constant GoalAndCriteria waterGoals[] = {
 			return densityOf(board.pixelAt(position.offsetBy(-1, 0))) < densityOf(Pixel::water);
 		}
 	},
-	GoalAndCriteria {
+	GoalAndCriteria { // move horizontally right
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(1, 0), 1);
 		},
@@ -108,6 +115,7 @@ constant GoalAndCriteria treeGoals[] = {
 			return Goal::changeTo(Pixel::fire, 1);
 		},
 		[](Board board, Position position, RNG rng) {
+			// TODO: make i8?
 			for (int xOffset : {-1, 0, 1}) {
 				for (int yOffset : {-1, 0, 1}) {
 					if (board.pixelAt(position.offsetBy(xOffset, yOffset)) == Pixel::fire) {
@@ -142,7 +150,8 @@ constant GoalAndCriteria fireGoals[] = {
 
 Goal Board::goalForCellAt(Position position, unsigned int frameNumber) {
 	constant GoalAndCriteria* goals;
-	int goalCount;
+	// TODO: make u8?
+	unsigned int goalCount;
 	
 	switch (pixelAt(position)) {
 		case Pixel::air:
@@ -176,9 +185,9 @@ Goal Board::goalForCellAt(Position position, unsigned int frameNumber) {
 	RNG criteriaRNG { position, frameNumber };
 	
 	Goal currentGoal = Goal::changeTo(pixelAt(position), 0);
-	int numberConsidered = 0;
+	unsigned int numberConsidered = 0;
 	
-	for (int i = 0; i < goalCount; i += 1) {
+	for (unsigned int i = 0; i < goalCount; i += 1) {
 		Goal candidateGoal = goals[i].goal(position);
 		
 		if (candidateGoal.priority < currentGoal.priority) {
@@ -186,18 +195,14 @@ Goal Board::goalForCellAt(Position position, unsigned int frameNumber) {
 				   // the one we have is of the highest priority left
 		}
 		
+		// function groups
+		// [[function_groups("")]]
 		if (!goals[i].criteria(*this, position, criteriaRNG)) {
 			continue; // this goal's criteria is not met
 		}
 		
 		numberConsidered += 1;
 		
-		// this should be unreachable bc goals are sorted by priority
-		// and everything works out with numberConsidered that this should be ok
-//		if (candidateGoal.priority > currentGoal.priority) {
-//			currentGoal = candidateGoal;
-//			numberConsidered = 1;
-//		} else
 		if (goalChoiceRNG.oneChanceIn(numberConsidered)) {
 			// each candidate has a (1/index) chance of winning,
 			// which is equivalent to randomly selecting one
