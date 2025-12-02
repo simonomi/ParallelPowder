@@ -17,8 +17,8 @@ struct GoalAndCriteria {
 	{};
 };
 
-constant int treeGrowChance = /* 1 in */ 1000;
-constant int treeBurnChance = /* 1 in */ 1000000;
+constant int treeGrowChance = /* 1 in */ 500;
+constant int treeBurnChance = /* 1 in */ 100000;
 
 constant GoalAndCriteria airGoals[] = {
 	GoalAndCriteria { // grow tree randomly

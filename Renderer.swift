@@ -168,7 +168,7 @@ class Renderer: NSObject, MTKViewDelegate {
 		let commandBuffer = commandQueue.makeCommandBuffer()!
 		
 		if !isPaused {
-//			for _ in 0..<5 {
+//			for _ in 0..<10 {
 				tick(commandBuffer)
 				boards.swapAt(0, 1)
 //			}
@@ -282,5 +282,15 @@ class Renderer: NSObject, MTKViewDelegate {
 	
 	static func allAir(width: Int, height: Int) -> [Pixel] {
 		Array(repeating: .air, count: width * height)
+	}
+	
+	static func randomTrees(width: Int, height: Int) -> [Pixel] {
+		(0..<(width * height)).map { _ in
+			if Int.random(in: 0..<5) == 0 {
+				.tree
+			} else {
+				.air
+			}
+		}
 	}
 }
