@@ -5,13 +5,16 @@
 using namespace metal;
 
 struct GoalAndCriteria {
+	uint8_t priority;
 	Goal (*goal)(Position position);
 	bool (*criteria)(InputBoard board, Position position, RNG rng);
 	
 	GoalAndCriteria(
+		uint8_t inputPriority,
 		Goal (*inputGoal)(Position position),
 		bool (*inputCriteria)(InputBoard board, Position position, RNG rng)
 	) :
+		priority(inputPriority),
 		goal(inputGoal),
 		criteria(inputCriteria)
 	{};
@@ -30,8 +33,9 @@ const constant unsigned int treeBurnChance = /* 1 in */ 100000;
 
 const constant GoalAndCriteria airGoals[] = {
 	GoalAndCriteria { // grow tree randomly
+		1,
 		[](Position position) {
-			return Goal::changeTo(Pixel::tree, 1);
+			return Goal::changeTo(Pixel::tree);
 		},
 		[](InputBoard board, Position position, RNG rng) {
 			return rng.oneChanceIn(treeGrowChance);
@@ -41,24 +45,27 @@ const constant GoalAndCriteria airGoals[] = {
 
 const constant GoalAndCriteria sandGoals[] = {
 	GoalAndCriteria { // fall down
+		1,
 		[](Position position) {
-			return Goal::swapWith(position.offsetBy(0, -1), 1);
+			return Goal::swapWith(position.offsetBy(0, -1));
 		},
 		[](InputBoard board, Position position, RNG rng) {
 			return densityOf(board.pixelAt(position.offsetBy(0, -1))) < densityOf(Pixel::sand);
 		}
 	},
 	GoalAndCriteria { // fall diagonally left
+		1,
 		[](Position position) {
-			return Goal::swapWith(position.offsetBy(-1, -1), 1);
+			return Goal::swapWith(position.offsetBy(-1, -1));
 		},
 		[](InputBoard board, Position position, RNG rng) {
 			return densityOf(board.pixelAt(position.offsetBy(-1, -1))) < densityOf(Pixel::sand);
 		}
 	},
 	GoalAndCriteria { // fall diagonally right
+		1,
 		[](Position position) {
-			return Goal::swapWith(position.offsetBy(1, -1), 1);
+			return Goal::swapWith(position.offsetBy(1, -1));
 		},
 		[](InputBoard board, Position position, RNG rng) {
 			return densityOf(board.pixelAt(position.offsetBy(1, -1))) < densityOf(Pixel::sand);
@@ -68,40 +75,45 @@ const constant GoalAndCriteria sandGoals[] = {
 
 const constant GoalAndCriteria waterGoals[] = {
 	GoalAndCriteria { // fall down
+		2,
 		[](Position position) {
-			return Goal::swapWith(position.offsetBy(0, -1), 2);
+			return Goal::swapWith(position.offsetBy(0, -1));
 		},
 		[](InputBoard board, Position position, RNG rng) {
 			return densityOf(board.pixelAt(position.offsetBy(0, -1))) < densityOf(Pixel::water);
 		}
 	},
 	GoalAndCriteria { // fall diagonally left
+		2,
 		[](Position position) {
-			return Goal::swapWith(position.offsetBy(-1, -1), 2);
+			return Goal::swapWith(position.offsetBy(-1, -1));
 		},
 		[](InputBoard board, Position position, RNG rng) {
 			return densityOf(board.pixelAt(position.offsetBy(-1, -1))) < densityOf(Pixel::water);
 		}
 	},
 	GoalAndCriteria { // fall diagonally right
+		2,
 		[](Position position) {
-			return Goal::swapWith(position.offsetBy(1, -1), 2);
+			return Goal::swapWith(position.offsetBy(1, -1));
 		},
 		[](InputBoard board, Position position, RNG rng) {
 			return densityOf(board.pixelAt(position.offsetBy(1, -1))) < densityOf(Pixel::water);
 		}
 	},
 	GoalAndCriteria { // move horizontally left
+		1,
 		[](Position position) {
-			return Goal::swapWith(position.offsetBy(-1, 0), 1);
+			return Goal::swapWith(position.offsetBy(-1, 0));
 		},
 		[](InputBoard board, Position position, RNG rng) {
 			return densityOf(board.pixelAt(position.offsetBy(-1, 0))) < densityOf(Pixel::water);
 		}
 	},
 	GoalAndCriteria { // move horizontally right
+		1,
 		[](Position position) {
-			return Goal::swapWith(position.offsetBy(1, 0), 1);
+			return Goal::swapWith(position.offsetBy(1, 0));
 		},
 		[](InputBoard board, Position position, RNG rng) {
 			return densityOf(board.pixelAt(position.offsetBy(1, 0))) < densityOf(Pixel::water);
@@ -111,8 +123,9 @@ const constant GoalAndCriteria waterGoals[] = {
 
 const constant GoalAndCriteria treeGoals[] = {
 	GoalAndCriteria { // burn if a neighbor is burning
+		1,
 		[](Position position) {
-			return Goal::changeTo(Pixel::fire, 1);
+			return Goal::changeTo(Pixel::fire);
 		},
 		[](InputBoard board, Position position, RNG rng) {
 			for (int8_t xOffset : {-1, 0, 1}) {
@@ -127,8 +140,9 @@ const constant GoalAndCriteria treeGoals[] = {
 		}
 	},
 	GoalAndCriteria { // start burning randomly
+		1,
 		[](Position position) {
-			return Goal::changeTo(Pixel::fire, 1);
+			return Goal::changeTo(Pixel::fire);
 		},
 		[](InputBoard board, Position position, RNG rng) {
 			return rng.oneChanceIn(treeBurnChance);
@@ -138,8 +152,9 @@ const constant GoalAndCriteria treeGoals[] = {
 
 const constant GoalAndCriteria fireGoals[] = {
 	GoalAndCriteria { // stop burning
+		1,
 		[](Position position) {
-			return Goal::changeTo(Pixel::air, 1);
+			return Goal::changeTo(Pixel::air);
 		},
 		[](InputBoard board, Position position, RNG rng) {
 			return true;
@@ -182,13 +197,14 @@ Goal InputBoard::goalForCellAt(Position position, uint16_t frameNumber) const {
 	RNG goalChoiceRNG { position, frameNumber };
 	RNG criteriaRNG { position, frameNumber };
 	
-	Goal currentGoal = Goal::changeTo(uncheckedPixelAt(position), 0);
+	Goal currentGoal = Goal::changeTo(uncheckedPixelAt(position));
+	uint8_t currentPriority = 0;
 	int16_t numberConsidered = 0;
 	
 	for (int16_t i = 0; i < goalCount; i += 1) {
 		const Goal candidateGoal = goals[i].goal(position);
 		
-		if (candidateGoal.priority < currentGoal.priority) {
+		if (goals[i].priority < currentPriority) {
 			break; // because goals are sorted by priority
 				   // the one we have is of the highest priority left
 		}
@@ -203,6 +219,7 @@ Goal InputBoard::goalForCellAt(Position position, uint16_t frameNumber) const {
 			// each candidate has a (1/index) chance of winning,
 			// which is equivalent to randomly selecting one
 			currentGoal = candidateGoal;
+			currentPriority = goals[i].priority;
 		}
 	}
 	

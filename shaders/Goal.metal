@@ -5,35 +5,25 @@
 
 using namespace metal;
 
-Goal Goal::changeTo(
-	const Pixel newPixel,
-	const uint8_t priority
-) {
+Goal Goal::changeTo(const Pixel newPixel) {
 	return Goal(
 		Kind::change,
-		Data { .newPixel = newPixel },
-		priority
+		Data { .newPixel = newPixel }
 	);
 }
 
-Goal Goal::swapWith(
-	const Position target,
-	const uint8_t priority
-) {
-	return Goal(
+Goal Goal::swapWith(const Position target) {
+	return Goal {
 		Kind::swap,
-		Data { .target = target },
-		priority
-	);
+		Data { .target = target }
+	};
 }
 
 Goal::Goal(
 	const Kind inputKind,
-	const Data inputData,
-	const uint8_t inputPriority
+	const Data inputData
 ) :
 	kind(inputKind),
-	data(inputData),
-	priority(inputPriority)
+	data(inputData)
 {}
 #endif

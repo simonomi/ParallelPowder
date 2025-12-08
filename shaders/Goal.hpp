@@ -15,25 +15,16 @@ struct Goal {
 						 // if we're ALU-bound now though, is it still worth making Goals smaller?
 	} data;
 	
-	uint8_t priority;
-	
 	enum struct Kind: uint8_t { change, swap } kind;
 	
-	static Goal changeTo(
-		Pixel newPixel,
-		uint8_t priority
-	);
+	static Goal changeTo(Pixel newPixel);
 	
-	static Goal swapWith(
-		Position target,
-		uint8_t priority
-	);
+	static Goal swapWith(Position target);
 	
 private:
 	Goal(
 		Kind inputKind,
-		Data inputData,
-		uint8_t inputPriority
+		Data inputData
 	);
 };
 
