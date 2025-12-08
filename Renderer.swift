@@ -19,7 +19,6 @@ class Renderer: NSObject, MTKViewDelegate {
 	var commandQueue: MTLCommandQueue
 	
 	let makeGoalsPipeline: MTLComputePipelineState
-	let updatePixelsPipeline: MTLComputePipelineState
 	let renderPipeline: MTLRenderPipelineState
 	
 	let uniformsBuffer: MTLBuffer
@@ -37,7 +36,6 @@ class Renderer: NSObject, MTKViewDelegate {
 		let library = device.makeDefaultLibrary()!
 		
 		makeGoalsPipeline = Self.buildMakeGoalsPipeline(device, library)
-		updatePixelsPipeline = Self.buildUpdatePixelsPipeline(device, library)
 		renderPipeline = Self.buildRenderPipeline(device, metalKitView)
 		
 		var initialUniforms = Uniforms(
@@ -64,14 +62,6 @@ class Renderer: NSObject, MTKViewDelegate {
 		_ library: MTLLibrary
 	) -> MTLComputePipelineState {
 		let makeGoals = library.makeFunction(name: "makeGoals")!
-		return try! device.makeComputePipelineState(function: makeGoals)
-	}
-	
-	static func buildUpdatePixelsPipeline(
-		_ device: MTLDevice,
-		_ library: MTLLibrary
-	) -> MTLComputePipelineState {
-		let makeGoals = library.makeFunction(name: "updatePixels")!
 		return try! device.makeComputePipelineState(function: makeGoals)
 	}
 	
@@ -141,21 +131,14 @@ class Renderer: NSObject, MTKViewDelegate {
 		let commandBuffer = commandQueue.makeCommandBuffer()!
 		
 		if !isPaused {
-//			for _ in 0..<10 {
-				tick(commandBuffer)
-				boards.swapAt(0, 1)
-//			}
+			boards.swapAt(0, 1)
+			makeGoals(commandBuffer)
 		}
 		
 		render(view, commandBuffer)
 		
 		commandBuffer.present(drawable)
 		commandBuffer.commit()
-	}
-	
-	func tick(_ commandBuffer: any MTLCommandBuffer) {
-		makeGoals(commandBuffer)
-		updatePixels(commandBuffer)
 	}
 	
 	func makeGoals(_ commandBuffer: any MTLCommandBuffer) {
@@ -187,36 +170,6 @@ class Renderer: NSObject, MTKViewDelegate {
 		computeEncoder.endEncoding()
 	}
 	
-	func updatePixels(_ commandBuffer: any MTLCommandBuffer) {
-		let computeEncoder = commandBuffer.makeComputeCommandEncoder()!
-		
-		computeEncoder.label = "updatePixels"
-		
-		computeEncoder.setBuffer(uniformsBuffer, offset: 0, index: 0)
-		computeEncoder.setBuffer(boards[0], offset: 0, index: 1)
-		computeEncoder.setBuffer(boards[1], offset: 0, index: 2)
-		computeEncoder.setBuffer(goalsBuffer, offset: 0, index: 3)
-		
-		computeEncoder.setComputePipelineState(updatePixelsPipeline)
-		
-		let threadsPerGrid = MTLSize(
-			width: Int(currentSize.width),
-			height: Int(currentSize.height),
-			depth: 1
-		)
-		
-		let w = updatePixelsPipeline.threadExecutionWidth
-		let h = updatePixelsPipeline.maxTotalThreadsPerThreadgroup / w
-		let threadsPerThreadgroup = MTLSize(width: w, height: h, depth: 1)
-		
-		computeEncoder.dispatchThreads(
-			threadsPerGrid,
-			threadsPerThreadgroup: threadsPerThreadgroup
-		)
-		
-		computeEncoder.endEncoding()
-	}
-	
 	func render(_ view: MTKView, _ commandBuffer: any MTLCommandBuffer) {
 		let renderPassDescriptor = view.currentRenderPassDescriptor!
 		
@@ -224,6 +177,8 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		renderEncoder.setFragmentBuffer(uniformsBuffer, offset: 0, index: 0)
 		renderEncoder.setFragmentBuffer(boards[0], offset: 0, index: 1)
+		renderEncoder.setFragmentBuffer(boards[1], offset: 0, index: 2)
+		renderEncoder.setFragmentBuffer(goalsBuffer, offset: 0, index: 3)
 		
 		renderEncoder.setRenderPipelineState(renderPipeline)
 		
