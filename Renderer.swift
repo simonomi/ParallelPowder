@@ -1,7 +1,6 @@
 import Foundation
 import MetalKit
-
-var isPaused = false
+import SwiftUI
 
 var reset = false
 var isDrawing = false
@@ -11,8 +10,6 @@ var radius = 1
 
 var drawCanvas: Pixel = .air
 var drawPaint: Pixel = .sand
-
-var previousFrameDate = Date()
 
 // ideas
 // - resolution UI
@@ -37,7 +34,7 @@ class Renderer: NSObject, MTKViewDelegate {
 	var commandQueue: MTLCommandQueue
 	
 	let makeGoalsPipeline: MTLComputePipelineState
-	let renderPipeline: MTLRenderPipelineState
+	var renderPipeline: MTLRenderPipelineState?
 	
 	let uniformsBuffer: MTLBuffer
 	
@@ -47,19 +44,20 @@ class Renderer: NSObject, MTKViewDelegate {
 	
 	var currentSize: CGSize
 	
-	init(metalKitView: MTKView) {
-		device = metalKitView.device!
+	@Binding var isPaused: Bool
+	
+	init(isPaused: Binding<Bool>) {
+		device = MTLCreateSystemDefaultDevice()!
 		commandQueue = device.makeCommandQueue()!
 		
 		let library = device.makeDefaultLibrary()!
 		
 		makeGoalsPipeline = Self.buildMakeGoalsPipeline(device, library)
-		renderPipeline = Self.buildRenderPipeline(device, metalKitView)
 		
 		var initialUniforms = Uniforms(
-			width: UInt16(metalKitView.drawableSize.width),
-			height: UInt16(metalKitView.drawableSize.height),
-			frameNumber: 1,
+			width: 0,
+			height: 0,
+			frameNumber: 0,
 		)
 		uniformsBuffer = device.makeBuffer(
 			bytes: &initialUniforms,
@@ -70,7 +68,9 @@ class Renderer: NSObject, MTKViewDelegate {
 		
 		goalsBuffer = device.makeBuffer(length: 1)!
 		
-		currentSize = metalKitView.drawableSize
+		currentSize = .zero
+		
+		self._isPaused = isPaused
 		
 		super.init()
 	}
@@ -123,32 +123,27 @@ class Renderer: NSObject, MTKViewDelegate {
 				uniforms.pointee.width = UInt16(size.width)
 				uniforms.pointee.height = UInt16(size.height)
 				
-				uniforms.pointee.frameNumber = 1
+				uniforms.pointee.frameNumber = 0
 			}
 	}
 	
 	func draw(in view: MTKView) {
 		precondition(view.drawableSize == currentSize)
 		
-		let fps = 1 / -previousFrameDate.timeIntervalSinceNow
-		if fps.isFinite {
-			print(Int(fps), "fps", separator: "")
-		}
-		
-		previousFrameDate = .now
-		
 		guard let drawable = view.currentDrawable else { return }
 		
 		processInput()
 		
+		var isFirstFrame: Bool = false
 		uniformsBuffer.contents()
 			.withMemoryRebound(to: Uniforms.self, capacity: 1) { uniforms in
 				uniforms.pointee.frameNumber &+= 1
+				isFirstFrame = uniforms.pointee.frameNumber == 1
 			}
 		
 		let commandBuffer = commandQueue.makeCommandBuffer()!
 		
-		if !isPaused {
+		if !isPaused || isFirstFrame {
 			boards.swapAt(0, 1)
 			makeGoals(commandBuffer)
 		}
@@ -198,7 +193,11 @@ class Renderer: NSObject, MTKViewDelegate {
 		renderEncoder.setFragmentBuffer(boards[1], offset: 0, index: 2)
 		renderEncoder.setFragmentBuffer(goalsBuffer, offset: 0, index: 3)
 		
-		renderEncoder.setRenderPipelineState(renderPipeline)
+		if renderPipeline == nil {
+			renderPipeline = Self.buildRenderPipeline(device, view)
+		}
+		
+		renderEncoder.setRenderPipelineState(renderPipeline!)
 		
 		renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
 		

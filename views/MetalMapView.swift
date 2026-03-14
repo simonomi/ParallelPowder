@@ -2,21 +2,23 @@ import SwiftUI
 import MetalKit
 
 struct MetalMapView: NSViewRepresentable {
-	var metalKitView: MTKView
-	var renderer: Renderer
+	@Binding var isPaused: Bool
 	
-	init() {
-		metalKitView = MTKView()
+	func makeCoordinator() -> Renderer {
+		Renderer(isPaused: $isPaused)
+	}
+	
+	func makeNSView(context: Context) -> MTKView {
+		let metalKitView = MTKView()
 		metalKitView.device = MTLCreateSystemDefaultDevice()!
 //		metalKitView.preferredFramesPerSecond = 2
+		metalKitView.delegate = context.coordinator
 		
-		renderer = Renderer(metalKitView: metalKitView)
-		metalKitView.delegate = renderer
+		return metalKitView
 	}
 	
-	func makeNSView(context: NSViewRepresentableContext<MetalMapView>) -> MTKView {
-		metalKitView
+	func updateNSView(_ metalKitView: MTKView, context: Context) {
+		metalKitView.device = MTLCreateSystemDefaultDevice()!
+		metalKitView.delegate = context.coordinator
 	}
-	
-	func updateNSView(_ uiView: MTKView, context: NSViewRepresentableContext<MetalMapView>) {}
 }

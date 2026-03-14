@@ -3,11 +3,33 @@ import SwiftUI
 @main
 struct ParallelPowder: App {
 	@FocusState private var isFocused: Bool
+	
 	@State private var cursorIsHidden: Bool = false
+	
+	@State private var inspectorPresented: Bool = true
+	
+	@State private var isPaused: Bool = false
 	
 	var body: some Scene {
 		WindowGroup {
-			MetalMapView()
+			MetalMapView(isPaused: $isPaused)
+				.inspector(isPresented: $inspectorPresented) {
+					Text("gadget")
+				}
+				.toolbar {
+					Button(
+						isPaused ? "Play" : "Pause",
+						systemImage: isPaused ? "play.fill" : "pause.fill"
+					) {
+						isPaused.toggle()
+					}
+					
+					Spacer()
+					
+					Button("Inspector", systemImage: "sidebar.trailing") {
+						inspectorPresented.toggle()
+					}
+				}
 				.focusable()
 				.focusEffectDisabled()
 				.focused($isFocused)
@@ -16,7 +38,6 @@ struct ParallelPowder: App {
 				}
 				.onKeyPress(.space) {
 					isPaused.toggle()
-					print(isPaused ? "pause" : "unpause")
 					
 					return .handled
 				}
@@ -58,6 +79,8 @@ struct ParallelPowder: App {
 				}
 				.onKeyPress("h") {
 					cursorIsHidden.toggle()
+					inspectorPresented = !cursorIsHidden
+					
 					if cursorIsHidden {
 						NSCursor.hide()
 					} else {
