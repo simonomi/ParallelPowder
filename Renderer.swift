@@ -14,6 +14,24 @@ var drawPaint: Pixel = .sand
 
 var previousFrameDate = Date()
 
+// ideas
+// - resolution UI
+// - speed UI
+// - runtime rules/UI
+//   - save/load
+//   - per-pixel (color picker)
+//   - rule priority
+//   - criteria interface
+//     - constant
+//     - one chance in
+//     - density less than density of X
+//     - is any neighbor X
+//     - comments/labels?
+//   - goal interface
+//     - change
+//     - swap
+// - export images
+
 class Renderer: NSObject, MTKViewDelegate {
 	var device: MTLDevice
 	var commandQueue: MTLCommandQueue

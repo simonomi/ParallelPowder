@@ -28,6 +28,8 @@ const constant unsigned int treeBurnChance = /* 1 in */ 100000;
 // the default goal of a cell is to change to itself. this means
 // that a cell with no goals _can_ be swapped with
 
+// TODO: ising model https://en.wikipedia.org/wiki/Ising_model
+
 const constant GoalAndCriteria airGoals[] = {
 	GoalAndCriteria { // grow tree randomly
 		[](Position position) {
