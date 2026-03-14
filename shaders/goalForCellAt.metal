@@ -4,11 +4,11 @@
 
 using namespace metal;
 
-struct GoalAndCriteria {
+struct Rule {
 	Goal (*goal)(Position position);
 	bool (*criteria)(InputBoard board, Position position, RNG rng);
 	
-	GoalAndCriteria(
+	Rule(
 		Goal (*inputGoal)(Position position),
 		bool (*inputCriteria)(InputBoard board, Position position, RNG rng)
 	) :
@@ -30,8 +30,8 @@ const constant unsigned int treeBurnChance = /* 1 in */ 100000;
 
 // TODO: ising model https://en.wikipedia.org/wiki/Ising_model
 
-const constant GoalAndCriteria airGoals[] = {
-	GoalAndCriteria { // grow tree randomly
+const constant Rule airRules[] = {
+	Rule { // grow tree randomly
 		[](Position position) {
 			return Goal::changeTo(Pixel::tree, 1);
 		},
@@ -41,8 +41,8 @@ const constant GoalAndCriteria airGoals[] = {
 	}
 };
 
-const constant GoalAndCriteria sandGoals[] = {
-	GoalAndCriteria { // fall down
+const constant Rule sandRules[] = {
+	Rule { // fall down
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(0, -1), 1);
 		},
@@ -50,7 +50,7 @@ const constant GoalAndCriteria sandGoals[] = {
 			return densityOf(board.pixelAt(position.offsetBy(0, -1))) < densityOf(Pixel::sand);
 		}
 	},
-	GoalAndCriteria { // fall diagonally left
+	Rule { // fall diagonally left
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(-1, -1), 1);
 		},
@@ -58,7 +58,7 @@ const constant GoalAndCriteria sandGoals[] = {
 			return densityOf(board.pixelAt(position.offsetBy(-1, -1))) < densityOf(Pixel::sand);
 		}
 	},
-	GoalAndCriteria { // fall diagonally right
+	Rule { // fall diagonally right
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(1, -1), 1);
 		},
@@ -68,8 +68,8 @@ const constant GoalAndCriteria sandGoals[] = {
 	}
 };
 
-const constant GoalAndCriteria waterGoals[] = {
-	GoalAndCriteria { // fall down
+const constant Rule waterRules[] = {
+	Rule { // fall down
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(0, -1), 2);
 		},
@@ -77,7 +77,7 @@ const constant GoalAndCriteria waterGoals[] = {
 			return densityOf(board.pixelAt(position.offsetBy(0, -1))) < densityOf(Pixel::water);
 		}
 	},
-	GoalAndCriteria { // fall diagonally left
+	Rule { // fall diagonally left
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(-1, -1), 2);
 		},
@@ -85,7 +85,7 @@ const constant GoalAndCriteria waterGoals[] = {
 			return densityOf(board.pixelAt(position.offsetBy(-1, -1))) < densityOf(Pixel::water);
 		}
 	},
-	GoalAndCriteria { // fall diagonally right
+	Rule { // fall diagonally right
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(1, -1), 2);
 		},
@@ -93,7 +93,7 @@ const constant GoalAndCriteria waterGoals[] = {
 			return densityOf(board.pixelAt(position.offsetBy(1, -1))) < densityOf(Pixel::water);
 		}
 	},
-	GoalAndCriteria { // move horizontally left
+	Rule { // move horizontally left
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(-1, 0), 1);
 		},
@@ -101,7 +101,7 @@ const constant GoalAndCriteria waterGoals[] = {
 			return densityOf(board.pixelAt(position.offsetBy(-1, 0))) < densityOf(Pixel::water);
 		}
 	},
-	GoalAndCriteria { // move horizontally right
+	Rule { // move horizontally right
 		[](Position position) {
 			return Goal::swapWith(position.offsetBy(1, 0), 1);
 		},
@@ -111,8 +111,8 @@ const constant GoalAndCriteria waterGoals[] = {
 	}
 };
 
-const constant GoalAndCriteria treeGoals[] = {
-	GoalAndCriteria { // burn if a neighbor is burning
+const constant Rule treeRules[] = {
+	Rule { // burn if a neighbor is burning
 		[](Position position) {
 			return Goal::changeTo(Pixel::fire, 1);
 		},
@@ -128,7 +128,7 @@ const constant GoalAndCriteria treeGoals[] = {
 			return false;
 		}
 	},
-	GoalAndCriteria { // start burning randomly
+	Rule { // start burning randomly
 		[](Position position) {
 			return Goal::changeTo(Pixel::fire, 1);
 		},
@@ -138,8 +138,8 @@ const constant GoalAndCriteria treeGoals[] = {
 	}
 };
 
-const constant GoalAndCriteria fireGoals[] = {
-	GoalAndCriteria { // stop burning
+const constant Rule fireRules[] = {
+	Rule { // stop burning
 		[](Position position) {
 			return Goal::changeTo(Pixel::air, 1);
 		},
@@ -150,58 +150,58 @@ const constant GoalAndCriteria fireGoals[] = {
 };
 
 Goal InputBoard::goalForCellAt(Position position, uint16_t frameNumber) const {
-	const constant GoalAndCriteria* goals;
-	uint16_t goalCount;
+	const constant Rule* rules;
+	uint16_t ruleCount;
 	
 	switch (uncheckedPixelAt(position)) {
 		case Pixel::air:
-			goals = airGoals;
-			goalCount = sizeof(airGoals) / sizeof(*airGoals);
+			rules = airRules;
+			ruleCount = sizeof(airRules) / sizeof(*airRules);
 			break;
 		case Pixel::sand:
-			goals = sandGoals;
-			goalCount = sizeof(sandGoals) / sizeof(*sandGoals);
+			rules = sandRules;
+			ruleCount = sizeof(sandRules) / sizeof(*sandRules);
 			break;
 		case Pixel::water:
-			goals = waterGoals;
-			goalCount = sizeof(waterGoals) / sizeof(*waterGoals);
+			rules = waterRules;
+			ruleCount = sizeof(waterRules) / sizeof(*waterRules);
 			break;
 		case Pixel::tree:
-			goals = treeGoals;
-			goalCount = sizeof(treeGoals) / sizeof(*treeGoals);
+			rules = treeRules;
+			ruleCount = sizeof(treeRules) / sizeof(*treeRules);
 			break;
 		case Pixel::fire:
-			goals = fireGoals;
-			goalCount = sizeof(fireGoals) / sizeof(*fireGoals);
+			rules = fireRules;
+			ruleCount = sizeof(fireRules) / sizeof(*fireRules);
 			break;
 		case Pixel::outOfBounds:
 		case Pixel::block:
-			goals = {};
-			goalCount = 0;
+			rules = {};
+			ruleCount = 0;
 			break;
 	}
 	
-	RNG goalChoiceRNG { position, frameNumber };
+	RNG ruleChoiceRNG { position, frameNumber };
 	RNG criteriaRNG { position, frameNumber };
 	
 	Goal currentGoal = Goal::changeTo(uncheckedPixelAt(position), 0);
 	int16_t numberConsidered = 0;
 	
-	for (int16_t i = 0; i < goalCount; i += 1) {
-		const Goal candidateGoal = goals[i].goal(position);
+	for (int16_t i = 0; i < ruleCount; i += 1) {
+		const Goal candidateGoal = rules[i].goal(position);
 		
 		if (candidateGoal.priority < currentGoal.priority) {
-			break; // because goals are sorted by priority
+			break; // because rules are sorted by priority
 				   // the one we have is of the highest priority left
 		}
 		
-		if (!goals[i].criteria(*this, position, criteriaRNG)) {
+		if (!rules[i].criteria(*this, position, criteriaRNG)) {
 			continue; // this goal's criteria is not met
 		}
 		
 		numberConsidered += 1;
 		
-		if (goalChoiceRNG.oneChanceIn(numberConsidered)) {
+		if (ruleChoiceRNG.oneChanceIn(numberConsidered)) {
 			// each candidate has a (1/index) chance of winning,
 			// which is equivalent to randomly selecting one
 			currentGoal = candidateGoal;
