@@ -13,6 +13,10 @@ struct OutputBoard {
 		const constant Uniforms& uniforms
 	);
 	
+	bool containsPosition(Position position) const;
+	
+	Pixel pixelAt(Position position) const;
+	
 	void setPixelAt(Position position, Pixel newValue);
 };
 

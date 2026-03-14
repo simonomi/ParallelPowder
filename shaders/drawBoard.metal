@@ -41,6 +41,10 @@ fragment float4 drawBoard(
 	const InputBoard previous { previousTick, uniforms };
 	OutputBoard current { currentTick, uniforms };
 	
+	if (uniforms.isPaused) {
+		return colorFor(current.pixelAt(position));
+	}
+	
 	const Goal myGoal = goals[int(position.y) * int(uniforms.width) + int(position.x)];
 	
 	switch (myGoal.kind) {

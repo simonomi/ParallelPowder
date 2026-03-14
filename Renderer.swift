@@ -2,15 +2,6 @@ import Foundation
 import MetalKit
 import SwiftUI
 
-var reset = false
-var isDrawing = false
-var drawLocation = CGPoint(x: -1, y: -1)
-
-var radius = 1
-
-var drawCanvas: Pixel = .air
-var drawPaint: Pixel = .sand
-
 // ideas
 // - resolution UI
 // - speed UI
@@ -46,7 +37,23 @@ class Renderer: NSObject, MTKViewDelegate {
 	
 	@Binding var isPaused: Bool
 	
-	init(isPaused: Binding<Bool>) {
+	@Binding var reset: Bool
+	
+	@Binding var drawLocation: CGPoint?
+	
+	@Binding var radius: Int
+	
+	@Binding var drawCanvas: Pixel
+	@Binding var drawPaint: Pixel
+	
+	init(
+		isPaused: Binding<Bool>,
+		reset: Binding<Bool>,
+		drawLocation: Binding<CGPoint?>,
+		radius: Binding<Int>,
+		drawCanvas: Binding<Pixel>,
+		drawPaint: Binding<Pixel>
+	) {
 		device = MTLCreateSystemDefaultDevice()!
 		commandQueue = device.makeCommandQueue()!
 		
@@ -58,6 +65,7 @@ class Renderer: NSObject, MTKViewDelegate {
 			width: 0,
 			height: 0,
 			frameNumber: 0,
+			isPaused: false
 		)
 		uniformsBuffer = device.makeBuffer(
 			bytes: &initialUniforms,
@@ -71,6 +79,11 @@ class Renderer: NSObject, MTKViewDelegate {
 		currentSize = .zero
 		
 		self._isPaused = isPaused
+		self._reset = reset
+		self._drawLocation = drawLocation
+		self._radius = radius
+		self._drawCanvas = drawCanvas
+		self._drawPaint = drawPaint
 		
 		super.init()
 	}
@@ -101,7 +114,7 @@ class Renderer: NSObject, MTKViewDelegate {
 		currentSize = size
 		let (width, height) = (Int(size.width), Int(size.height))
 		
-		print("resized to \(width)x\(height)")
+		print("resized to \(width)×\(height)")
 		
 		boards = (0..<2).map { _ in
 			device.makeBuffer(
@@ -139,6 +152,7 @@ class Renderer: NSObject, MTKViewDelegate {
 			.withMemoryRebound(to: Uniforms.self, capacity: 1) { uniforms in
 				uniforms.pointee.frameNumber &+= 1
 				isFirstFrame = uniforms.pointee.frameNumber == 1
+				uniforms.pointee.isPaused = isPaused
 			}
 		
 		let commandBuffer = commandQueue.makeCommandBuffer()!
@@ -208,20 +222,21 @@ class Renderer: NSObject, MTKViewDelegate {
 		if reset {
 			let (width, height) = (Int(currentSize.width), Int(currentSize.height))
 			
-			boards[0] = device.makeBuffer(
-				bytes: Self.allAir(width: width, height: height),
-				length: width * height
-			)!
+			boards[1].contents().initializeMemory(
+				as: Pixel.self,
+				repeating: .air,
+				count: width * height
+			)
 			
 			reset = false
 		}
 		
-		if isDrawing {
+		if let drawLocation {
 			let (width, height) = (Int(currentSize.width), Int(currentSize.height))
 			let (x, y) = (Int(drawLocation.x * 2), height - Int(drawLocation.y * 2))
 			
 			if 0 < x, x < width, 0 < y, y < height {
-				boards[0].contents().withMemoryRebound(
+				boards[1].contents().withMemoryRebound(
 					to: Pixel.self,
 					capacity: width * height
 				) { pointer in

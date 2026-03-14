@@ -4,8 +4,24 @@ import MetalKit
 struct MetalMapView: NSViewRepresentable {
 	@Binding var isPaused: Bool
 	
+	@Binding var reset: Bool
+	
+	@Binding var drawLocation: CGPoint?
+	
+	@Binding var radius: Int
+	
+	@Binding var drawCanvas: Pixel
+	@Binding var drawPaint: Pixel
+	
 	func makeCoordinator() -> Renderer {
-		Renderer(isPaused: $isPaused)
+		Renderer(
+			isPaused: $isPaused,
+			reset: $reset,
+			drawLocation: $drawLocation,
+			radius: $radius,
+			drawCanvas: $drawCanvas,
+			drawPaint: $drawPaint
+		)
 	}
 	
 	func makeNSView(context: Context) -> MTKView {
