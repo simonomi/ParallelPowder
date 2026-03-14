@@ -30,7 +30,7 @@ struct ParallelPowder: App {
 				drawPaint: $drawPaint
 			)
 			.inspector(isPresented: $inspectorPresented) {
-				Text("gadget")
+				PixelsView()
 			}
 			.toolbar {
 				Button(

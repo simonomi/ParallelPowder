@@ -16,6 +16,9 @@
 		AB6BF5402E4EE7AA005D2464 /* goalForCellAt.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB6BF53F2E4EE7AA005D2464 /* goalForCellAt.metal */; };
 		AB6BF54A2E4EF90A005D2464 /* Pixel.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB6BF5492E4EF90A005D2464 /* Pixel.metal */; };
 		AB6BF54E2E4F1147005D2464 /* drawBoard.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB6BF54D2E4F1147005D2464 /* drawBoard.metal */; };
+		AB6E83292F651E3A003760F5 /* PixelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6E83282F651E3A003760F5 /* PixelsView.swift */; };
+		AB6E832B2F6522FD003760F5 /* PixelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6E832A2F6522FD003760F5 /* PixelView.swift */; };
+		AB6E832D2F652862003760F5 /* GoalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6E832C2F652862003760F5 /* GoalView.swift */; };
 		AB9C78AB2E4E803D008C90FD /* Position.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB9C78AA2E4E803D008C90FD /* Position.metal */; };
 		AB9C78AF2E4E83DA008C90FD /* RNG.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB9C78AE2E4E83DA008C90FD /* RNG.metal */; };
 		AB9C78B12E4E84CF008C90FD /* Goal.metal in Sources */ = {isa = PBXBuildFile; fileRef = AB9C78B02E4E84CF008C90FD /* Goal.metal */; };
@@ -39,6 +42,9 @@
 		AB6BF5492E4EF90A005D2464 /* Pixel.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Pixel.metal; sourceTree = "<group>"; };
 		AB6BF54D2E4F1147005D2464 /* drawBoard.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = drawBoard.metal; sourceTree = "<group>"; };
 		AB6BF54F2E4F116D005D2464 /* VertexShaderResult.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VertexShaderResult.hpp; sourceTree = "<group>"; };
+		AB6E83282F651E3A003760F5 /* PixelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelsView.swift; sourceTree = "<group>"; };
+		AB6E832A2F6522FD003760F5 /* PixelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelView.swift; sourceTree = "<group>"; };
+		AB6E832C2F652862003760F5 /* GoalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalView.swift; sourceTree = "<group>"; };
 		AB9C78AA2E4E803D008C90FD /* Position.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Position.metal; sourceTree = "<group>"; };
 		AB9C78AC2E4E806A008C90FD /* Position.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Position.hpp; sourceTree = "<group>"; };
 		AB9C78AD2E4E83D1008C90FD /* RNG.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RNG.hpp; sourceTree = "<group>"; };
@@ -91,6 +97,9 @@
 			children = (
 				AB2426E02E4A8B9D004A7AC0 /* ParallelPowder.swift */,
 				AB46BB2E2E4A9DB000D391C3 /* MetalMapView.swift */,
+				AB6E83282F651E3A003760F5 /* PixelsView.swift */,
+				AB6E832A2F6522FD003760F5 /* PixelView.swift */,
+				AB6E832C2F652862003760F5 /* GoalView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -197,15 +206,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB6E83292F651E3A003760F5 /* PixelsView.swift in Sources */,
 				AB9E5CD12EDE9E5000DA9F03 /* InputBoard.metal in Sources */,
 				AB6BF5342E4E8B08005D2464 /* fullScreenVertices.metal in Sources */,
 				AB46BB272E4A963D00D391C3 /* Renderer.swift in Sources */,
 				AB9C78B12E4E84CF008C90FD /* Goal.metal in Sources */,
 				AB46BB252E4A8ECD00D391C3 /* makeGoals.metal in Sources */,
 				AB46BB2F2E4A9DB000D391C3 /* MetalMapView.swift in Sources */,
+				AB6E832D2F652862003760F5 /* GoalView.swift in Sources */,
 				AB9C78B32E4E84D4008C90FD /* OutputBoard.metal in Sources */,
 				AB9C78AB2E4E803D008C90FD /* Position.metal in Sources */,
 				AB2426E42E4A8B9D004A7AC0 /* ParallelPowder.swift in Sources */,
+				AB6E832B2F6522FD003760F5 /* PixelView.swift in Sources */,
 				AB6BF54A2E4EF90A005D2464 /* Pixel.metal in Sources */,
 				AB9C78AF2E4E83DA008C90FD /* RNG.metal in Sources */,
 				AB6BF54E2E4F1147005D2464 /* drawBoard.metal in Sources */,
