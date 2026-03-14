@@ -10,14 +10,14 @@ struct ParallelPowder: App {
 	
 	@State private var isPaused: Bool = false
 	
-	@State var reset = false
+	@State private var reset = false
 	
-	@State var drawLocation: CGPoint?
+	@State private var drawLocation: CGPoint?
 	
-	@State var radius = 20
+	@State private var radius = 20
 	
-	@State var drawCanvas: Pixel = .air
-	@State var drawPaint: Pixel = .sand
+	@State private var drawCanvas: Pixel = .air
+	@State private var drawPaint: Pixel = .sand
 	
 	var body: some Scene {
 		WindowGroup {
@@ -38,6 +38,13 @@ struct ParallelPowder: App {
 					systemImage: isPaused ? "play.fill" : "pause.fill"
 				) {
 					isPaused.toggle()
+				}
+				
+				Button(
+					"Reset",
+					systemImage: "arrow.counterclockwise"
+				) {
+					reset = true
 				}
 				
 				Spacer()
@@ -95,15 +102,15 @@ struct ParallelPowder: App {
 			}
 			.onKeyPress("h") {
 				cursorIsHidden.toggle()
-				inspectorPresented = !cursorIsHidden
 				
-				if cursorIsHidden {
+				return .handled
+			}
+			.onChange(of: cursorIsHidden) { (_, newValue) in
+				if newValue {
 					NSCursor.hide()
 				} else {
 					NSCursor.unhide()
 				}
-				
-				return .handled
 			}
 			.gesture(
 				DragGesture()
